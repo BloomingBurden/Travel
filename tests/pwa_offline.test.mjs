@@ -7,6 +7,7 @@ const swUrl = new URL('../sw.js', import.meta.url);
 const manifestUrl = new URL('../manifest.webmanifest', import.meta.url);
 const gpxUrl = new URL('../turkey-route-2026.gpx', import.meta.url);
 const kmlUrl = new URL('../turkey-route-2026.kml', import.meta.url);
+const indexUrl = new URL('../index.html', import.meta.url);
 
 const sw = existsSync(swUrl) ? readFileSync(swUrl, 'utf8') : '';
 
@@ -43,4 +44,12 @@ test('manifest and offline navigator export files are present', () => {
   assert.match(html, /href="turkey-route-2026\.kml"/);
   assert.match(html, /https:\/\/osmand\.net\/map\/navigate\//);
   assert.match(html, /https:\/\/omaps\.app\/v2\/nav/);
+});
+
+test('site root forwards visitors to the map entrypoint', () => {
+  assert.ok(existsSync(indexUrl), 'index.html should exist for static hosting root URLs');
+
+  const index = readFileSync(indexUrl, 'utf8');
+  assert.match(index, /url=turkey_map\.html/);
+  assert.match(index, /href="turkey_map\.html"/);
 });
