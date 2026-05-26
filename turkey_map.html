@@ -1,0 +1,1757 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🇹🇷 Турция 2026 — Навигатор</title>
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css"/>
+<script src="vendor/leaflet/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#263348;--border:#334155;
+  --text:#f1f5f9;--muted:#94a3b8;--accent:#f97316;
+  --p1:#3b82f6;--p2:#f97316;--p3:#22c55e;
+  --red:#ef4444;--yellow:#eab308;--green:#22c55e;--blue:#3b82f6;--purple:#a78bfa;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px}
+
+/* ── HEADER ── */
+#hdr{display:flex;align-items:center;gap:12px;padding:9px 16px;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  z-index:1000;flex-shrink:0}
+#hdr h1{font-size:15px;font-weight:800;white-space:nowrap}
+#hdr .sub{font-size:11px;color:var(--muted);white-space:nowrap}
+.hstats{display:flex;gap:14px;margin-left:auto}
+.hs{text-align:center;cursor:default}
+.hs .v{font-size:13px;font-weight:700;color:var(--accent)}
+.hs .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+#offline-badge{background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  padding:3px 10px;border-radius:20px;display:none}
+#offline-badge.show{display:block}
+
+/* ── LAYOUT ── */
+#wrap{display:flex;height:calc(100vh - 45px)}
+
+/* ── SIDEBAR ── */
+#sb{width:296px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.ptabs{display:flex;border-bottom:1px solid var(--border)}
+.ptab{flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:700;
+  cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;
+  transition:all .15s;background:none;border-top:none;border-left:none;border-right:none}
+.ptab.a{color:var(--text);border-bottom-color:var(--accent)}
+.ptab:hover:not(.a){color:var(--text)}
+#daylist{overflow-y:auto;flex:1}
+.ditem{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background .1s;position:relative}
+.ditem:hover{background:rgba(255,255,255,.04)}
+.ditem.a{background:rgba(249,115,22,.1);border-left:3px solid var(--accent)}
+.drow{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.dnum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:#fff}
+.dtitle{font-size:12px;font-weight:700;flex:1;line-height:1.3}
+.dkm{font-size:10px;color:var(--blue);font-weight:600;flex-shrink:0}
+.dsub{font-size:10px;color:var(--muted);padding-left:34px;line-height:1.3}
+.dwow{position:absolute;right:10px;top:10px;font-size:9px}
+
+/* ── MAP AREA ── */
+#mwrap{flex:1;position:relative;overflow:hidden}
+#map{width:100%;height:100%}
+
+/* ── DETAIL PANEL ── */
+#det{position:absolute;right:0;top:0;bottom:0;width:360px;
+  background:var(--surface);border-left:1px solid var(--border);
+  z-index:900;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .25s ease;overflow-y:auto}
+#det.open{transform:translateX(0)}
+.det-hdr{padding:14px 14px 12px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--surface);z-index:10}
+.det-close{position:absolute;top:12px;right:12px;background:var(--border);
+  border:none;color:var(--text);width:28px;height:28px;border-radius:50%;
+  cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;
+  line-height:1}
+.det-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;
+  display:inline-block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.det-name{font-size:18px;font-weight:800;line-height:1.2;margin-bottom:4px}
+.det-day{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px}
+.det-desc{font-size:12px;color:#cbd5e1;line-height:1.55}
+.det-body{padding:14px}
+.sec-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;margin:14px 0 8px}
+.hotel-card{background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;margin-bottom:7px}
+.hotel-name{font-size:13px;font-weight:700;margin-bottom:3px}
+.hotel-area{font-size:11px;color:var(--muted)}
+.hotel-price{font-size:12px;color:var(--green);font-weight:700;margin-top:2px}
+.hotel-stars{font-size:10px;color:var(--yellow)}
+.att-item{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.att-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.att-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.att-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.att-price{font-size:11px;color:var(--green);font-weight:700;margin-top:2px}
+.tip-box{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);
+  border-radius:10px;padding:10px 12px;font-size:12px;color:#fde68a;line-height:1.5;
+  margin-top:8px}
+.nav-btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.nav-btn{flex:1 1 calc(50% - 4px);min-width:132px;padding:10px 8px;border-radius:10px;border:none;
+  font-size:12px;font-weight:700;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.nav-gm{background:#4285f4;color:#fff}
+.nav-ym{background:#fc3f1d;color:#fff}
+.nav-osm{background:#65a30d;color:#fff}
+.nav-om{background:#0f766e;color:#fff}
+.nav-gm:hover{background:#3574e2}.nav-ym:hover{background:#e0351a}
+.nav-osm:hover{background:#55880c}.nav-om:hover{background:#0d665f}
+.alt-section{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+.alt-item{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);
+  border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px}
+.alt-label{font-size:10px;color:var(--purple);font-weight:700;margin-bottom:3px}
+
+/* ── MAP CONTROLS ── */
+#ctrls{position:absolute;bottom:20px;left:12px;z-index:800;
+  display:flex;flex-direction:column;gap:7px}
+.cbtn{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:7px 12px;font-size:11px;font-weight:700;color:var(--text);cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none}
+.cbtn:hover{background:var(--border)}
+.cbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── GENERAL INFO MODAL ── */
+#info-modal{position:fixed;inset:0;z-index:1600;display:none;align-items:center;
+  justify-content:center;padding:22px;background:rgba(15,23,42,.72);
+  backdrop-filter:blur(4px)}
+#info-modal.open{display:flex}
+.info-panel{width:min(920px,100%);max-height:min(820px,88vh);background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.58);
+  display:flex;flex-direction:column;overflow:hidden}
+.info-hdr{position:relative;padding:15px 52px 13px 18px;border-bottom:1px solid var(--border);
+  background:var(--surface)}
+.info-kicker{font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:4px}
+.info-title{font-size:18px;font-weight:800;line-height:1.2}
+.info-close{top:13px;right:14px}
+.info-body{overflow-y:auto;padding:18px 20px 22px}
+.md-content{font-size:13px;line-height:1.58;color:#dbe4ef}
+.md-content h1,.md-content h2,.md-content h3{line-height:1.25;color:var(--text)}
+.md-content h1{font-size:24px;margin:0 0 12px}
+.md-content h2{font-size:19px;margin:24px 0 10px;padding-top:8px;border-top:1px solid var(--border)}
+.md-content h3{font-size:15px;margin:17px 0 8px;color:#f8fafc}
+.md-content p{margin:8px 0}
+.md-content strong{color:#fff;font-weight:800}
+.md-content em{color:#cbd5e1}
+.md-content ul,.md-content ol{margin:8px 0 10px 22px}
+.md-content li{margin:4px 0}
+.md-content blockquote{margin:10px 0;padding:8px 12px;border-left:3px solid var(--accent);
+  background:rgba(249,115,22,.08);color:#fde68a;border-radius:0 8px 8px 0}
+.md-content pre{margin:10px 0;padding:12px;overflow:auto;background:#0b1120;
+  border:1px solid var(--border);border-radius:8px;color:#dbe4ef}
+.md-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.92em;
+  background:rgba(148,163,184,.16);border:1px solid rgba(148,163,184,.16);
+  border-radius:5px;padding:1px 4px}
+.md-content pre code{background:none;border:none;padding:0}
+.md-table-wrap{overflow-x:auto;margin:10px 0;border:1px solid var(--border);border-radius:8px}
+.md-content table{width:100%;border-collapse:collapse;min-width:560px;background:rgba(255,255,255,.02)}
+.md-content th,.md-content td{padding:8px 10px;border-bottom:1px solid var(--border);
+  text-align:left;vertical-align:top}
+.md-content th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;
+  background:rgba(255,255,255,.04)}
+.md-content tr:last-child td{border-bottom:none}
+.body-info-open{overflow:hidden}
+
+/* ── LEGEND ── */
+#legend{position:absolute;bottom:20px;right:12px;z-index:800;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 13px;font-size:11px}
+.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.leg-item:last-child{margin-bottom:0}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.leg-line{width:20px;height:3px;border-radius:2px;flex-shrink:0}
+
+/* ── LEAFLET POPUP OVERRIDES ── */
+.leaflet-popup-content-wrapper{
+  background:var(--surface)!important;border:1px solid var(--border)!important;
+  border-radius:12px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;
+  color:var(--text)!important;min-width:200px}
+.leaflet-popup-tip{background:var(--surface)!important}
+.leaflet-popup-content{margin:12px 14px!important}
+.pop-title{font-size:14px;font-weight:800;margin-bottom:4px}
+.pop-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.pop-more{background:var(--accent);color:#fff;border:none;border-radius:8px;
+  padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;width:100%}
+.pop-more:hover{background:#ea6c0a}
+
+/* ── GPS pulse ── */
+@keyframes gps-pulse{0%{transform:scale(1);opacity:.8}50%{transform:scale(1.8);opacity:0}100%{transform:scale(1);opacity:.8}}
+.gps-dot{width:14px;height:14px;background:#3b82f6;border-radius:50%;
+  border:2px solid #fff;box-shadow:0 0 0 rgba(59,130,246,.5);
+  animation:gps-pulse 2s ease-in-out infinite}
+.gps-ring{width:14px;height:14px;border-radius:50%;
+  background:rgba(59,130,246,.3);animation:gps-pulse 2s ease-in-out infinite}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #sb{position:absolute;left:-296px;top:0;bottom:0;z-index:999;
+    transition:left .25s;box-shadow:4px 0 20px rgba(0,0,0,.4)}
+  #sb.mob-open{left:0}
+  #mob-menu{display:flex!important}
+  .hstats{display:none}
+  #sb-close-bar{display:flex!important}
+  #det{width:100%;left:0;right:0;top:auto;bottom:0;height:82vh;
+    transform:translateY(100%);border-left:none;
+    border-top:1px solid var(--border);border-radius:16px 16px 0 0}
+  #det.open{transform:translateY(0)}
+  #legend{display:none}
+  #ctrls{bottom:10px;left:8px;gap:5px}
+  .cbtn{padding:7px 11px;font-size:11px}
+  #info-modal{padding:8px}
+  .info-panel{max-height:94vh;border-radius:12px}
+  .info-hdr{padding:13px 48px 12px 14px}
+  .info-title{font-size:16px}
+  .info-body{padding:14px}
+  .md-content{font-size:12px}
+  .md-content h1{font-size:20px}
+  .md-content h2{font-size:17px}
+  .ditem{padding:13px 14px}
+  .ptab{padding:12px 4px;font-size:12px}
+  .nav-btn{padding:13px 8px;font-size:13px}
+  .hotel-card{padding:12px}
+  .det-name{font-size:16px}
+}
+#mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:998;
+  -webkit-tap-highlight-color:transparent}
+#mob-overlay.show{display:block}
+#sb-close-bar{display:none;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+#mob-menu{display:none;background:none;border:none;color:var(--text);
+  font-size:22px;cursor:pointer;padding:6px 4px;-webkit-tap-highlight-color:transparent}
+.hotel-book{display:flex;align-items:center;justify-content:center;gap:5px;
+  background:rgba(0,116,255,.1);border:1px solid rgba(0,116,255,.25);color:#60a5fa;
+  border-radius:8px;padding:7px 10px;font-size:11px;font-weight:700;
+  text-decoration:none;margin-top:7px;transition:background .15s}
+.hotel-book:hover,.hotel-book:active{background:rgba(0,116,255,.25)}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <button id="mob-menu" onclick="document.getElementById('sb').classList.contains('mob-open')?closeSidebar():openSidebar()">☰</button>
+  <div>
+    <h1>🇹🇷 Турция 2026 — Навигатор</h1>
+    <div class="sub">Ереван → Западное побережье · Сентябрь 2026</div>
+  </div>
+  <span id="offline-badge">● ОФЛАЙН</span>
+  <div class="hstats">
+    <div class="hs"><div class="v">~17</div><div class="l">дней</div></div>
+    <div class="hs"><div class="v">~4 500</div><div class="l">км</div></div>
+    <div class="hs"><div class="v">$2 100–2 900</div><div class="l">бюджет</div></div>
+    <div class="hs"><div class="v">11</div><div class="l">WOW мест</div></div>
+  </div>
+</div>
+
+<div id="mob-overlay" onclick="closeSidebar()"></div>
+
+<div id="wrap">
+  <div id="sb">
+    <div id="sb-close-bar">
+      <span style="font-size:13px;font-weight:700;color:var(--muted)">🗺️ Маршрут</span>
+      <button onclick="closeSidebar()" style="background:var(--border);border:none;color:var(--text);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">×</button>
+    </div>
+    <div class="ptabs">
+      <button class="ptab a" onclick="filterPhase(0)" id="tab0">Все дни</button>
+      <button class="ptab" onclick="filterPhase(1)" id="tab1" style="color:#3b82f6">Ф1 Дорога</button>
+      <button class="ptab" onclick="filterPhase(2)" id="tab2" style="color:#f97316">Ф2 Анталия</button>
+      <button class="ptab" onclick="filterPhase(3)" id="tab3" style="color:#22c55e">Ф3 Запад</button>
+    </div>
+    <div id="daylist"></div>
+  </div>
+
+  <div id="mwrap">
+    <div id="map"></div>
+
+    <div id="det">
+      <div class="det-hdr">
+        <button class="det-close" onclick="closeDetail()">×</button>
+        <div id="det-type" class="det-type"></div>
+        <div id="det-name" class="det-name"></div>
+        <div id="det-day" class="det-day"></div>
+        <div id="det-desc" class="det-desc"></div>
+      </div>
+      <div class="det-body" id="det-body"></div>
+    </div>
+
+    <div id="ctrls">
+      <button class="cbtn" onclick="openInfoModal()" id="btn-info">ℹ️ Общая информация</button>
+      <button class="cbtn" onclick="toggleLayer('sat')" id="btn-sat">🛰️ Спутник</button>
+      <button class="cbtn" onclick="toggleLayer('danger')" id="btn-danger">⚠️ Зоны риска</button>
+      <button class="cbtn" onclick="toggleLayer('alt')" id="btn-alt">🔀 Альтернативы</button>
+      <button class="cbtn" onclick="gotoGPS()">📍 Где я?</button>
+      <a class="cbtn" href="turkey-route-2026.gpx" download>⬇️ GPX</a>
+      <a class="cbtn" href="turkey-route-2026.kml" download>⬇️ KML</a>
+    </div>
+
+    <div id="legend">
+      <div class="leg-item"><div class="leg-line" style="background:#3b82f6"></div> Фаза 1 — Дорога</div>
+      <div class="leg-item"><div class="leg-line" style="background:#f97316"></div> Фаза 2 — Анталия</div>
+      <div class="leg-item"><div class="leg-line" style="background:#22c55e"></div> Фаза 3 — Запад</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f97316;border:2px solid #fff"></div> Ночёвка</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#eab308"></div> Достопримечательность</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#ef4444;opacity:.5"></div> Level 4 — НЕ ЕХАТЬ</div>
+    </div>
+  </div>
+</div>
+
+<div id="info-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="info-title" onclick="closeInfoModal()">
+  <div class="info-panel" onclick="event.stopPropagation()">
+    <div class="info-hdr">
+      <button class="det-close info-close" onclick="closeInfoModal()" aria-label="Закрыть">×</button>
+      <div class="info-kicker">turkey_trip_2026.md</div>
+      <div class="info-title" id="info-title">Общая информация</div>
+    </div>
+    <div class="info-body">
+      <div id="info-content" class="md-content"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/plain" id="trip-info-source">
+# 🇹🇷 Турция 2026 — Личная инструкция
+> Сентябрь 2026 · Ереван → Анталия → Западное побережье · В одну сторону · Авто Toyota Fielder · 2 чел.
+
+---
+
+## TL;DR
+
+**3 фазы:**
+1. **Дорога до Анталии** — 5–6 дней с ключевыми остановками (Ани/Карс + Каппадокия)
+2. **Анталия-база** — 5 дней + дневные вылазки по окрестностям
+3. **После Анталии** — 5–7 дней вдоль Бирюзового побережья на запад
+
+**Итого:** ~16–18 дней  
+**Финиш:** Памуккале → Бодрум/Измир (вылет домой) или Даламан (у Фетхие)  
+**Бюджет:** ~$2 100–2 700 на двоих (с шаром)  
+**Граница:** Баврa → Vale/Türkgözü  
+**⚠️ Юго-восток НЕ ЕХАТЬ** — Level 4
+
+---
+
+## Маршрут — одним взглядом
+
+```
+Ереван
+  ↓ граница Баврa/Ниноцминда
+Ахалцихе (Грузия)
+  ↓ граница Vale/Türkgözü
+Карс + Ани
+  ↓
+Эрзурум (1 ночь транзит)
+  ↓
+КАППАДОКИЯ ★★★★★ (2 ночи)
+  ↓
+Анталия ★★★★★ (5 ночей — база)
+  ↓
+Олимпос + Янарташ
+  ↓
+Каш
+  ↓
+Олюдениз ★★★★★
+  ↓
+Фетхие + Саклыкент + Каяккёй
+  ↓
+Памуккале ★★★★★
+  ↓
+ФИНИШ: Бодрум / Измир / Даламан (вылет)
+```
+
+---
+
+## ФАЗА 1 — Дорога до Анталии (5–6 дней)
+
+### По дням
+
+| День | Откуда → Куда | Км | Ночёвка | Ключевое |
+|------|---------------|----|---------|----------|
+| 1 | Ереван → Ахалцихе → Карс | ~360 | Карс | Граница Баврa утром, граница Vale/Türkgözü после обеда |
+| 2 | Карс (+ Ани) | — | Карс | Целый день на руинах Ани. Самое недооцененное место Армении |
+| 3 | Карс → Эрзурум | ~210 | Эрзурум | Короткий перегон. Крепость Эрзурум вечером |
+| 4 | Эрзурум → Каппадокия | ~580 | Гёреме | Ранний выезд (6–7 утра). Самый длинный день за поездку |
+| 5 | Каппадокия | — | Гёреме | ★ ШАР НА РАССВЕТЕ. Долины, Деринкую |
+| 6 | Каппадокия → Анталия | ~590 | Анталия | Через Конью (остановка ~1 час, музей Мевляна) |
+
+> **День 4** — самый тяжёлый перегон. Выехать строго рано, иначе приедешь ночью.  
+> Можно разбить: Эрзурум → Сивас (300 км) → ночь → Сивас → Каппадокия (280 км). Тогда фаза 1 = 7 дней.
+
+### Что смотреть по дороге
+
+**Ани (у Карса)** — полдня–день  
+Заброшенная армянская столица X века прямо у границы. Пустые соборы, крепостные стены над ущельем, тишина. Трогает. Вход €7. Приехать утром, пока нет жары.
+
+**Каппадокия — программа на 1,5 дня**
+- Шар: подъём в 5:30, полёт ~1 час → самый запоминающийся момент поездки
+- Деринкую: подземный город на 8 этажей (€10), утром до туристов
+- Долина Пашабаг: «грибы» из туфа — 30 минут пешком
+- Долина Любви (Göreme): закат — идеально
+- Гёреме Музей: скальные церкви с фресками (€18) — можно пропустить если мало времени
+
+**Конья (проезд, ~1–2 часа)**  
+Музей Мевляна (дервиши) — вход €3. Достаточно 1,5 часа. Город очень консервативный, одеться скромно.
+
+---
+
+## ФАЗА 2 — Анталия-база (5 дней)
+
+### 5 дней в Анталии и рядом
+
+| День | Программа | Тип |
+|------|-----------|-----|
+| 7 | Приезд. Калейчи (старый город), набережная, ужин у воды | Прогулка |
+| 8 | Музей Анталии (лучший в Турции) + пляж Кониалти или Лара | Культура + пляж |
+| 9 | **Термессос** — горные руины (25 км от города) + водопад Дюден | Природа |
+| 10 | **Пергe + Аспендос** — два античных города к востоку + Side | Античность |
+| 11 | **Фаселис + Кемер** — руины у моря + последний пляжный день | Море + руины |
+
+### Что смотреть рядом с Анталией
+
+**Термессос** ★★★★★ — 25 км от города  
+Руины греческого города в горах на 1000м. Единственное место которое Александр Великий не взял. Пешком 2–3 часа по лесу, вид сверху — мощный. Вход €10. Ехать утром.
+
+**Аспендос** ★★★★ — 47 км к востоку  
+Театр II века н.э., вмещает 15 000 человек, сохранность 90%. Один из лучших в мире. Вход €18. 1,5 часа хватит.
+
+**Пергe** ★★★★ — 18 км к востоку  
+Большой античный город: колоннады, акрополь, стадион. Вход €12. Взять воду.
+
+**Сайд (Side)** ★★★ — 75 км к востоку  
+Руины прямо на пляже. Храм Аполлона у воды — классика. Купаться + руины одновременно. 3–4 часа.
+
+**Фаселис** ★★★★ — 60 км к западу (по дороге к Каш)  
+Три пляжа + античный порт в сосновом лесу. Один из самых красивых пляжей региона. Вход €10.
+
+**Водопад Дюден** ★★★ — 14 км от центра  
+Нижний Дюден — водопад падает прямо в море. Смотреть с лодки ($10) или с обрыва — бесплатно.
+
+**Каньон Кёпрюлю** ★★★★ — 90 км к северу  
+Рафтинг по горной реке (апрель–октябрь). ~$25/чел. Полдня + дорога.
+
+### Жильё в Анталии
+
+| Вариант | Район | Цена/ночь | Рейтинг |
+|---------|-------|-----------|---------|
+| Hadrian Gate Hotel | Калейчи (старый город) | $60–90 | ★★★★★ |
+| Tuvana Hotel | Калейчи | $80–120 | ★★★★★ |
+| Rixos Downtown | Центр | $100–150 | ★★★★ |
+
+> Жить в Калейчи — обязательно. Венецианский порт, римские ворота, оранжевые деревья.
+
+---
+
+## ФАЗА 3 — После Анталии (5–7 дней, на запад)
+
+### По дням
+
+| День | Откуда → Куда | Км | Ночёвка | Ключевое |
+|------|---------------|----|---------|----------|
+| 12 | Анталия → Олимпос + Янарташ | ~90 | Олимпос/Чирали | ★ Янарташ вечером — вечный огонь из земли |
+| 13 | Олимпос → Каш | ~90 | Каш | Лодочная прогулка Кекова — затопленный город |
+| 14 | Каш → Олюдениз | ~130 | Олюдениз | ★ Синяя лагуна. Параглайдинг с Бабадага |
+| 15 | Олюдениз → Фетхие + Саклыкент | ~15–40 | Фетхие | ★ Каньон Саклыкент + Каяккёй |
+| 16 | Фетхие → Памуккале | ~210 | Памуккале | ★ Белые террасы, Иераполис |
+| 17 | Памуккале → Бодрум или Измир | ~230–300 | Финиш | Вылет домой |
+
+> Если есть 7-й день: День 17 — Памуккале → **Эфес** (170 км) → Измир (80 км). Эфес — античный Рим в полном масштабе, €30. Летишь из Измира.
+
+### Что смотреть
+
+**Янарташ (Олимпос)** ★★★★★  
+25 минут пешком от парковки. Огонь из земли горит с IV века до н.э. — метан выходит через скалы. Идти вечером с фонариком. Рядом руины Олимпоса в лесу (вход $5). Ночевать в Чирали — самая расслабленная деревня Турции.
+
+**Каш** ★★★  
+Маленький порт. Главное: **лодочная прогулка к Кекова** — затопленный ликийский город под водой, видно с лодки. Полдня, ~$20/чел. Также ликийские гробницы прямо в скалах над городом.
+
+**Олюдениз** ★★★★★  
+Синяя лагуна — защищена природным заповедником. Пляж Белсекиз рядом. **Параглайдинг с горы Бабадаг (1969м)** — 25–40 минут полёта над лагуной, $80–120. Бронировать на месте утром. Летать днём — сильная термика, лучше 9–11 утра.
+
+**Саклыкент** ★★★★★  
+Каньон 300м высотой, 18 км длиной. Заходишь по воде (~15–20°C, по щиколотку), идёшь 1–2 часа между стенами. Взять сандалии. Вход €5. 20 минут от Фетхие.
+
+**Каяккёй (Мёртвый город)** ★★★★  
+Заброшенный греческий город 1923 года — греки уехали при обмене населением, дома пустые с тех пор. 8 км от Фетхие, вход €3. 1,5–2 часа.
+
+**Памуккале** ★★★★★  
+Белые кальциевые террасы ЮНЕСКО. Ходить босиком (обязательно снять обувь у входа). Сверху — Иераполис: греко-римский город с театром и некрополем. Вход €30 на всё. Прийти в 8:00 или после 17:00 — меньше народу. **Бассейн Клеопатры** (руины колонн в термальном бассейне, €20 отдельно) — должен открыться после ремонта к сентябрю 2026, проверить заранее.
+
+**Эфес** ★★★★★ (если будет день 17)  
+Крупнейший сохранившийся античный город мира. 2–3 часа минимум. Пойти рано (8:00), летом к 10 уже жарко и толпы. Вход €30. 80 км от Измира.
+
+### Откуда лететь домой
+
+| Аэропорт | Расстояние от Памуккале | Рейсы |
+|----------|------------------------|-------|
+| Даламан (DLM) | ~160 км | Рейсы в Ереван через Стамбул |
+| Бодрум (BJV) | ~230 км | Turkish Airlines через Стамбул |
+| Измир (ADB) | ~300 км | Много рейсов, крупный хаб |
+| Анталия (AYT) | ~230 км | Если лететь обратно из начала |
+
+> Измир — самый удобный, если добавить Эфес. Бодрум — если хочется закончить у моря.
+
+---
+
+## Бюджет на двоих (USD)
+
+| Категория | Tight ($) | Comfort ($) |
+|-----------|-----------|-------------|
+| Топливо (~3 500 км × 6 л × $1.10/л) | 230 | 230 |
+| Ночёвки (~16 ночей) | 550 | 900 |
+| Еда (17 дней) | 300 | 480 |
+| Достопримечательности | 220 | 220 |
+| HGS (платные дороги) | 35 | 35 |
+| Страховки (Грузия + Турция + мед.) | 80 | 80 |
+| e-Visa ($50 × 2) | 100 | 100 |
+| Параглайдинг Олюдениз (×2) | — | 200 |
+| Лодка Кекова (×2) | 40 | 40 |
+| Рафтинг Кёпрюлю (опц.) | — | 50 |
+| Запас/непредвиденное | 100 | 200 |
+| **ИТОГО без шара** | **~$1 655** | **~$2 535** |
+| + Шар Каппадокия (×2) | +$260–400 | +$260–400 |
+| **ИТОГО с шаром** | **~$1 900** | **~$2 900** |
+
+> Курс май 2026: **45.90 TL/USD**. Уточнить перед поездкой.
+
+---
+
+## Документы — чеклист
+
+### За 6–8 недель
+- [ ] **e-Visa Турция** — evisa.gov.tr (~$50/чел)
+- [ ] **Шар Каппадокия** — бронировать СЕЙЧАС (FELIZ Turismo / Unacapadocia, $150–200/чел)
+- [ ] **Турецкая ОСАГО** (Zorunlu Trafik Sigortası) — `gurbetkasko.com` или `ikamet.com` ДО границы
+- [ ] **Медицинская страховка** — с покрытием Грузия + Турция
+- [ ] **IDP (международные права)** — АРМАСА Ереван, ~5 000 AMD (армянские права по Венской конвенции действительны 90 дней, но IDP спокойнее)
+- [ ] **Авиабилеты домой** — купить заранее из Измира/Бодрума/Даламана
+
+### За 1–2 недели
+- [ ] Распечатать техпаспорт + доверенность (если авто не ваше)
+- [ ] Копии паспортов, прав, страховок
+- [ ] Скачать офлайн-карты: Google Maps / Maps.me (Грузия + Турция)
+- [ ] Карта Revolut / Wise (конвертация без комиссии)
+- [ ] Зарядники, power bank, аптечка
+
+### В день выезда
+- [ ] Наличные USD ($200–300)
+- [ ] HGS — получить на PTT у границы (паспорт + копия техпаспорта, депозит ~50 TL)
+- [ ] Грузинская TPL страховка — купить прямо на границе Баврa
+
+---
+
+## Границы
+
+### Армения → Грузия: Баврa / Ниноцминда
+- Часы работы: круглосуточно
+- Трафик: умеренный
+- Сразу после: ~2,5 часа до Ахалцихе
+
+### Грузия → Турция: Vale / Türkgözü
+- Часы работы: круглосуточно
+- Трафик: значительно меньше чем Сарпи
+- Сразу после: ~2 часа до Карса
+- На этой границе или сразу после — **купить HGS** (PTT-офис)
+
+### HGS — транспондер для платных дорог ⚠️
+- **Обязательно.** Без него штраф = 10× тариф. Могут не выпустить из страны при неоплаченных долгах
+- Взять в PTT: паспорт + копия техпаспорта, депозит ~50 TL
+- Пополнять: в любом PTT или онлайн на ogm.gov.tr
+
+---
+
+## ⚠️ Безопасность — зоны НЕ ЕХАТЬ
+
+> **US State Department Level 4** с марта 2026 — после инцидента, связанного с Ираном
+
+**Провинции под запретом:** Şanlıurfa, Gaziantep, Kilis, Adıyaman, Diyarbakır, Mardin, Şırnak, Hakkari, Batman, Siirt, Bitlis, **Van**, Muş, Bingöl, Tunceli, Elazığ, Malatya, Kahramanmaraş, Osmaniye, Adana, Mersin, Hatay
+
+**Из маршрута исключены автоматически:**
+- ❌ Ван и озеро Ван
+- ❌ Гёбеклитепе / Шанлыурфа
+- ❌ Немрут Дагы
+- ❌ Диярбакыр
+
+**Наш маршрут — в безопасных зонах:**
+- ✅ Карс, Эрзурум — OK
+- ✅ Каппадокия — OK
+- ✅ Анталия, побережье — OK
+- ✅ Фетхие, Памуккале — OK
+
+> Проверить актуальный статус: **travel.state.gov** перед отъездом
+
+---
+
+## Практика
+
+### Топливо
+- Расход: ~6 л/100 км
+- Цена в Турции: ~45–50 TL/л (~$1.05–1.10)
+- Заправляться полным в Грузии — там дешевле
+- Сети: Petrol Ofisi, Опет, Тотал — везде по трассе
+
+### Деньги
+- Лиры — снимать в банкоматах (Garanti, İş Bankası, лучший курс)
+- Карты Visa/Mastercard — принимают везде
+- Наличные USD — держать $200–300 на случай
+- Торговаться: на базарах — да. В ресторанах — нет
+- Чаевые в ресторане: 10%
+
+### Парковка
+- Синяя разметка = платно (паркомат), белая = бесплатно
+- Красная линия у тротуара = нельзя совсем
+- В туристических зонах (Каппадокия, Памуккале) — платные парковки $2–5
+
+### Museum Pass Turkey
+- Цена: €165/чел (~$180)
+- Окупается при посещении 5+ объектов из списка
+- Включает: Гёреме ОАМ (€18) + Деринкую (€10) + Аспендос (€18) + Эфес (€30) + Иераполис в Памуккале (€30) + Пергe (€12) = €118 без пасса
+- Купить у входа в первый объект на маршруте
+
+### Правила дороги
+- Ремни — обязательно (штраф сразу)
+- "Dur" = полная остановка, не замедление
+- Скорость: город 50, трасса 120, магистраль 130 км/ч
+- Телефон только хэндсфри
+- Нельзя фотографировать военные объекты и КПП
+
+---
+
+## Что проверить перед поездкой
+
+- [ ] travel.state.gov — актуальный уровень опасности
+- [ ] Статус бассейна Клеопатры (Памуккале) — ремонт до июня 2026
+- [ ] Авиабилеты домой из выбранного аэропорта
+- [ ] Режим работы Сумелы / Ани (бывают закрытия на реставрацию)
+- [ ] Курс TRY/USD на дату поездки
+
+---
+
+*Маршрут: одностороняя поездка Ереван → западная Турция · ~17 дней · сентябрь 2026*  
+*Составлено на основе 4 источников: plan PDF + 2 WOW-маршрута + security/logistics MD*
+</script>
+
+<script>
+// ══════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════
+
+const PHASES = [
+  {id:1, name:'Фаза 1 — Дорога до Анталии', color:'#3b82f6'},
+  {id:2, name:'Фаза 2 — Анталия-база', color:'#f97316'},
+  {id:3, name:'Фаза 3 — На запад', color:'#22c55e'},
+];
+
+// Main route coordinate sequence for polylines (per phase)
+const ROUTE_P1 = [
+  [40.1792,44.4991],[41.115,43.473],[41.640,43.000],[41.325,42.940],
+  [40.601,43.097],[40.507,43.572],[40.601,43.097],
+  [39.905,41.267],[38.643,34.829],[37.874,32.493],[36.887,30.702]
+];
+const ROUTE_P2 = [
+  [36.887,30.702],[37.062,30.474],[36.887,30.702],
+  [36.961,30.855],[36.939,31.172],[36.887,30.702],
+  [36.523,30.556],[36.887,30.702]
+];
+const ROUTE_P3 = [
+  [36.887,30.702],[36.398,30.478],[36.202,29.640],
+  [36.552,29.115],[36.622,29.113],[36.461,29.246],
+  [37.923,29.121],[37.940,27.342],[38.419,27.129]
+];
+
+const DAYS = [
+  {n:1,phase:1,from:'Ереван',to:'Карс',km:360,wow:3,main:'kars',
+   sum:'Две границы за день: Армения→Грузия→Турция. Ранний выезд 7:00!',
+   locs:['yerevan','bavra','akhaltsikhe','vale','kars']},
+  {n:2,phase:1,from:'Карс',to:'Ани',km:0,wow:5,main:'ani',
+   sum:'Целый день на руинах средневековой армянской столицы X века',
+   locs:['kars','ani']},
+  {n:3,phase:1,from:'Карс',to:'Эрзурум',km:210,wow:3,main:'erzurum',
+   sum:'Короткий перегон. Крепость Эрзурум вечером.',
+   locs:['kars','erzurum']},
+  {n:4,phase:1,from:'Эрзурум',to:'Каппадокия',km:580,wow:2,main:'goreme',
+   sum:'★ Самый длинный день! Выезд строго в 6-7 утра.',
+   locs:['erzurum','sivas','goreme']},
+  {n:5,phase:1,from:'Каппадокия',to:'Каппадокия',km:0,wow:5,main:'goreme',
+   sum:'★★ ШАР НА РАССВЕТЕ + Деринкую + долины',
+   locs:['goreme','balloon_point','derinkuyu','pashabag','love_valley']},
+  {n:6,phase:1,from:'Каппадокия',to:'Анталия',km:590,wow:3,main:'antalya',
+   sum:'Через Конью: музей Мевляна (~1-2 ч), потом на юг к морю',
+   locs:['goreme','konya','antalya']},
+  {n:7,phase:2,from:'Анталия',to:'Анталия',km:0,wow:4,main:'antalya',
+   sum:'Прибытие. Калейчи, Римский порт, набережная, ужин у воды',
+   locs:['antalya','kaleici','antalya_museum','konyaalti']},
+  {n:8,phase:2,from:'Анталия',to:'Термессос',km:50,wow:5,main:'termessos',
+   sum:'Руины которые не взял Александр Великий. Водопад Дюден.',
+   locs:['antalya','termessos','duden']},
+  {n:9,phase:2,from:'Анталия',to:'Аспендос+Перге',km:80,wow:4,main:'aspendos',
+   sum:'Лучший амфитеатр мира + античный Перге + пляж Сайд',
+   locs:['antalya','perge','aspendos','side']},
+  {n:10,phase:2,from:'Анталия',to:'Фаселис',km:60,wow:4,main:'phaselis',
+   sum:'Античный порт в сосновом лесу у трёх пляжей',
+   locs:['antalya','kemer','phaselis']},
+  {n:11,phase:2,from:'Анталия',to:'Анталия',km:0,wow:3,main:'antalya',
+   sum:'Свободный день: Музей Анталии, пляж, базар, рафтинг Кёпрюлю (опц.)',
+   locs:['antalya','koprulu']},
+  {n:12,phase:3,from:'Анталия',to:'Олимпос+Янарташ',km:90,wow:5,main:'yanartash',
+   sum:'★ Вечный огонь из скал 2500 лет. Смотреть с фонариком ночью!',
+   locs:['antalya','olympos','yanartash','chirali']},
+  {n:13,phase:3,from:'Чирали',to:'Каш',km:90,wow:4,main:'kas',
+   sum:'Лодочная прогулка Кекова — затопленный ликийский город под водой',
+   locs:['chirali','demre','kas','kekova']},
+  {n:14,phase:3,from:'Каш',to:'Олюдениз',km:130,wow:5,main:'oludeniz',
+   sum:'★★ Синяя лагуна. Параглайдинг с Бабадага 9-11 утра!',
+   locs:['kas','butterfly','oludeniz','babadag']},
+  {n:15,phase:3,from:'Фетхие',to:'Саклыкент',km:40,wow:5,main:'saklikent',
+   sum:'★ Каньон 300м + город-призрак греков 1923 г. + 12 островов',
+   locs:['fethiye','kayakoy','saklikent']},
+  {n:16,phase:3,from:'Фетхие',to:'Памуккале',km:210,wow:5,main:'pamukkale',
+   sum:'★ Белые известняковые террасы ЮНЕСКО + Иераполис',
+   locs:['fethiye','pamukkale','hierapolis']},
+  {n:17,phase:3,from:'Памуккале',to:'Бодрум/Измир',km:230,wow:4,main:'izmir',
+   sum:'Опционально: Эфес (2-3 ч). Финиш. Вылет домой.',
+   locs:['pamukkale','ephesus','izmir','bodrum']},
+];
+
+const LOCS = {
+  yerevan:{name:'Ереван',coords:[40.1792,44.4991],type:'city',phase:0,day:0,
+    desc:'Столица Армении — стартовая точка путешествия. Выезд в 7:00.',
+    hotels:[
+      {name:'Republica Hotel',area:'Центр',price:'$55-80/ночь',stars:'★★★★'},
+      {name:'Grand Hotel Yerevan',area:'пл. Республики',price:'$80-120/ночь',stars:'★★★★★'},
+    ],
+    sights:[
+      {ico:'🎭',name:'Каскад',price:'Бесплатно',desc:'Монументальная лестница с видом на Арарат'},
+      {ico:'⛲',name:'Площадь Республики',price:'Бесплатно',desc:'Советский ампир, поющие фонтаны'},
+      {ico:'🥃',name:'Завод Ararat',price:'~$15',desc:'Дегустация армянского коньяка'},
+    ],
+    tip:'Полный бак перед выездом в Армении. Выехать не позже 7:00 чтобы успеть две границы.',
+    alt_hotels:[{name:'Tufenkian Historic Yerevan',price:'$90-130',stars:'★★★★★'}]},
+
+  bavra:{name:'Граница Баврa / Ниноцминда',coords:[41.115,43.473],type:'border',phase:1,day:1,
+    desc:'Армяно-грузинская граница. Круглосуточно. Очереди 30-60 мин.',
+    hotels:[],sights:[],
+    tip:'Грузинскую страховку ТПЛ купить прямо здесь на границе (~$10). Паспорт + тех.паспорт.',
+    alt_hotels:[]},
+
+  akhaltsikhe:{name:'Ахалцихе',coords:[41.640,43.000],type:'city',phase:1,day:1,
+    desc:'Грузинский город с крепостью Рабати. Транзит.',
+    hotels:[{name:'Hotel Akhaltsikhe',area:'Центр',price:'$25-35/ночь',stars:'★★★'}],
+    sights:[{ico:'🏰',name:'Крепость Рабати',price:'~$5',desc:'Средневековая крепость XII века'}],
+    tip:'При желании — ночёвка здесь и разбить день 1 на два более спокойных дня.',
+    alt_hotels:[]},
+
+  vale:{name:'Граница Vale / Türkgözü',coords:[41.325,42.940],type:'border',phase:1,day:1,
+    desc:'Грузино-турецкая граница. Круглосуточно. Значительно меньше машин чем на Сарпи.',
+    hotels:[],sights:[],
+    tip:'Сразу за границей в Карсе — PTT-офис для оформления HGS транспондера (паспорт + копия тех.паспорта, депозит ~50 TL). Турецкая ОСАГО тоже тут!',
+    alt_hotels:[]},
+
+  kars:{name:'Карс',coords:[40.601,43.097],type:'city',phase:1,day:1,
+    desc:'Приграничный город. База для посещения Ани. Хорошие отели по разумным ценам.',
+    hotels:[
+      {name:'Cheltikci Hotel',area:'Центр',price:'$30-45/ночь',stars:'★★★★'},
+      {name:'Katerina Sarayi',area:'Центр',price:'$35-55/ночь',stars:'★★★★'},
+      {name:'Hotel Temel',area:'Центр',price:'$20-30/ночь',stars:'★★★'},
+    ],
+    sights:[
+      {ico:'🏰',name:'Крепость Карса',price:'Бесплатно',desc:'Крепость XIX века с видом на город'},
+      {ico:'🕌',name:'Мечеть Куммет',price:'Бесплатно',desc:'Армянская церковь XII века, превращённая в мечеть'},
+      {ico:'🧀',name:'Сыр Карс',price:'~$5/кг',desc:'Знаменитый местный сыр — купить на базаре'},
+    ],
+    tip:'Ужин в ресторане «Ocakbaşı» — лучший кебаб в городе. Сыр Карс купить на рынке.',
+    alt_hotels:[{name:'Grand Ani Hotel',price:'$40-60',stars:'★★★★'}]},
+
+  ani:{name:'Руины Ани',coords:[40.507,43.572],type:'wow',phase:1,day:2,
+    desc:'Заброшенная столица армянского царства Багратидов X века. Пустые соборы, крепостные стены над ущельем. 45 мин от Карса.',
+    hotels:[],
+    sights:[
+      {ico:'⛪',name:'Собор Ани',price:'В билете',desc:'Главный собор 1001 г. постройки, поражает масштабом'},
+      {ico:'🏰',name:'Крепостные стены',price:'В билете',desc:'Протяжённые укрепления с видом на ущелье р.Ахурян'},
+      {ico:'⛩️',name:'Церковь Тихвинской Богоматери',price:'В билете',desc:'Хорошо сохранившаяся церковь у обрыва'},
+    ],
+    tip:'Вход €7. Приехать утром (8:00) — меньше жары и туристов. Взять воду! Нет кафе внутри. Разрешена фотография.',
+    alt_hotels:[]},
+
+  erzurum:{name:'Эрзурум',coords:[39.905,41.267],type:'city',phase:1,day:3,
+    desc:'Крупный восточный город на высоте 1900 м. Транзитная ночёвка.',
+    hotels:[
+      {name:'Dedeman Erzurum',area:'Центр',price:'$45-65/ночь',stars:'★★★★'},
+      {name:'Palan Hotel',area:'Центр',price:'$25-40/ночь',stars:'★★★'},
+    ],
+    sights:[
+      {ico:'🏰',name:'Крепость Эрзурум',price:'Бесплатно',desc:'Древняя крепость с панорамой города'},
+      {ico:'🕌',name:'Двойные минареты',price:'Бесплатно',desc:'Знаменитые медресе XIII века — символ города'},
+      {ico:'🛍️',name:'Базар Каpalı çarşı',price:'Бесплатно',desc:'Крытый рынок, ювелирные изделия из чёрного янтаря'},
+    ],
+    tip:'Короткая остановка. Ужин в «Güzelyurt» — традиционная кухня. Черный янтарь (ольтуташи) — местный сувенир.',
+    alt_hotels:[{name:'Grand Hitit Hotel',price:'$30-45',stars:'★★★'}]},
+
+  sivas:{name:'Сивас (альтернатива)',coords:[39.748,37.016],type:'alt',phase:1,day:4,
+    desc:'Опциональная остановка для разбивки длинного дня 4 (Эрзурум→Каппадокия 580 км).',
+    hotels:[{name:'Sivas Keykavus Hotel',area:'Центр',price:'$30-45/ночь',stars:'★★★'}],
+    sights:[{ico:'🏛️',name:'Гёк медресе',price:'Бесплатно',desc:'Сельджукское медресе XIII века'}],
+    tip:'Если выехали из Эрзурума поздно — переночевать в Сивасе и продолжить до Каппадокии на следующий день.',
+    alt_hotels:[]},
+
+  goreme:{name:'Гёреме · Каппадокия',coords:[38.643,34.829],type:'wow',phase:1,day:5,
+    desc:'Скалы-«дымоходы фей», пещерные отели, рассвет с шаром — нет места красивее. 2 ночи минимум.',
+    hotels:[
+      {name:'Stone House Cave Hotel',area:'Гёреме',price:'$60-90/ночь',stars:'★★★★★'},
+      {name:'Adora Cave Suites',area:'Гёреме',price:'$70-110/ночь',stars:'★★★★★'},
+      {name:'Lucky Cave Hotel',area:'Гёреме',price:'$50-75/ночь',stars:'★★★★'},
+    ],
+    sights:[
+      {ico:'🎈',name:'Воздушный шар на рассвете',price:'€130-200/чел',desc:'Подъём в 5:30. Бронировать за 6-8 недель! FELIZ Turismo / Unacapadocia'},
+      {ico:'🏛️',name:'Гёреме музей (скальные церкви)',price:'€18',desc:'Фрески VIII-XII вв. в пещерных церквях'},
+      {ico:'🍄',name:'Долина Пашабаг',price:'Бесплатно',desc:'«Грибы» из туфа — 30 мин пешком'},
+      {ico:'❤️',name:'Долина Любви (закат)',price:'Бесплатно',desc:'Розовые скалы-фаллосы, невероятный вид на закате'},
+    ],
+    tip:'Обязательно жить в пещерном отеле — это часть впечатлений. Шар отменяют при ветре (~20% дней). Бронировать с полным возвратом при отмене по погоде.',
+    alt_hotels:[{name:'Urgup Evi Cave Suites',price:'$80-120',stars:'★★★★★'},{name:'SOS Cave Hotel',price:'$45-65',stars:'★★★★'}]},
+
+  balloon_point:{name:'Точка старта шаров',coords:[38.670,34.845],type:'wow',phase:1,day:5,
+    desc:'Стартовая площадка воздушных шаров. Сбор в 5:00-5:30.',
+    hotels:[],sights:[],tip:'Заранее уточнить место сбора у оператора. Взять тёплую куртку!',alt_hotels:[]},
+
+  derinkuyu:{name:'Деринкую (подземный город)',coords:[38.373,34.735],type:'wow',phase:1,day:5,
+    desc:'Подземный город на 8 этажей вниз, вмещал 20 000 человек. Узкие коридоры, кромешная тьма — невероятно.',
+    hotels:[],
+    sights:[{ico:'🕳️',name:'Деринкую',price:'€10',desc:'8-этажный подземный город II тыс. до н.э. — один из крупнейших в мире'}],
+    tip:'Прийти утром (8:00) до толпы туристов. Клаустрофобам — с осторожностью. Охватывает все уровни ~2 часа.',alt_hotels:[]},
+
+  pashabag:{name:'Долина Пашабаг',coords:[38.683,34.787],type:'sight',phase:1,day:5,
+    desc:'Трёхглавые «грибы» из вулканического туфа — самые живописные в регионе.',
+    hotels:[],sights:[{ico:'🍄',name:'Скалы-«грибы»',price:'Бесплатно',desc:'30 минут прогулки среди уникальных образований'}],
+    tip:'Лучшее освещение — утром или в золотой час.',alt_hotels:[]},
+
+  love_valley:{name:'Долина Любви',coords:[38.657,34.829],type:'sight',phase:1,day:5,
+    desc:'Роскошные виды на фаллические скалы и долину. Лучший закат в Каппадокии.',
+    hotels:[],sights:[{ico:'🌅',name:'Смотровая точка',price:'Бесплатно',desc:'Приходить за 1-2 часа до заката'}],
+    tip:'Кафе с видом рядом со смотровой — отличное место для ужина на закате.',alt_hotels:[]},
+
+  konya:{name:'Конья',coords:[37.874,32.493],type:'city',phase:1,day:6,
+    desc:'Религиозный центр Турции. Остановка на 1-2 часа. Музей Мевляна (дервиши).',
+    hotels:[{name:'Rumi Hotel',area:'Центр',price:'$40-60/ночь',stars:'★★★★'}],
+    sights:[
+      {ico:'🕌',name:'Музей Мевляна',price:'€3',desc:'Мавзолей поэта-суфия Руми. 1,5 часа. Очень атмосферное место'},
+      {ico:'🌀',name:'Сема — танец дервишей',price:'Бесплатно',desc:'Вечерние сеансы в государственных залах (при наличии)'},
+    ],
+    tip:'Конья очень консервативная — одеться скромно. Короткая остановка, не задерживаться.',alt_hotels:[]},
+
+  antalya:{name:'Анталия',coords:[36.887,30.702],type:'city',phase:2,day:7,
+    desc:'База на 5 дней. Жить в Калейчи — обязательно. Венецианский порт, Римские ворота, апельсиновые деревья.',
+    hotels:[
+      {name:'Hadrian Gate Hotel',area:'Калейчи',price:'$60-90/ночь',stars:'★★★★★'},
+      {name:'Tuvana Hotel',area:'Калейчи',price:'$80-120/ночь',stars:'★★★★★'},
+      {name:'Minyon Hotel',area:'Калейчи',price:'$45-65/ночь',stars:'★★★★'},
+      {name:'Sibel Mansion',area:'Калейчи',price:'$40-60/ночь',stars:'★★★★'},
+    ],
+    sights:[
+      {ico:'🏛️',name:'Анталийский музей',price:'€12',desc:'Лучший музей Турции. Коллекция античной скульптуры — мировой уровень'},
+      {ico:'🏰',name:'Калейчи',price:'Бесплатно',desc:'Старый город: Ворота Адриана, Римский порт, хамамы'},
+      {ico:'🏖️',name:'Пляж Коньялты',price:'Бесплатно',desc:'Длинный городской пляж с видом на горы Тавр'},
+    ],
+    tip:'Парковка внутри Калейчи — только за деньги и очень узко. Паркуйтесь снаружи у стен.',
+    alt_hotels:[{name:'Rixos Downtown',price:'$100-150',stars:'★★★★★'},{name:'Akra Hotel',price:'$70-100',stars:'★★★★'}]},
+
+  kaleici:{name:'Калейчи — Старый город',coords:[36.887,30.706],type:'sight',phase:2,day:7,
+    desc:'Исторический центр Анталии: ворота Адриана II века, Римский порт, мечеть Йивли, апельсиновые сады.',
+    hotels:[],
+    sights:[
+      {ico:'🏛️',name:'Ворота Адриана',price:'Бесплатно',desc:'Триумфальная арка 130 г. н.э. — главный символ города'},
+      {ico:'⛵',name:'Старый порт',price:'Бесплатно',desc:'Яхты, рестораны, вечерняя прогулка обязательна'},
+    ],
+    tip:'Вечером — ужин в ресторане у воды в старом порту. Столы прямо у моря.',alt_hotels:[]},
+
+  antalya_museum:{name:'Музей Анталии',coords:[36.879,30.685],type:'sight',phase:2,day:7,
+    desc:'Один из лучших музеев Турции. Древнегреческие и римские артефакты мирового класса.',
+    hotels:[],
+    sights:[{ico:'🏛️',name:'Музей Анталии',price:'€12',desc:'Зал богов, Пертеки, Галерея Саркофагов. Мин 3 часа.'}],
+    tip:'Museum Pass покрывает вход. Приходить утром в открытие.',alt_hotels:[]},
+
+  konyaalti:{name:'Пляж Коньялты',coords:[36.870,30.634],type:'sight',phase:2,day:7,
+    desc:'Городской пляж Анталии с галечным берегом и видом на горы. Длина 7 км.',
+    hotels:[],sights:[{ico:'🏖️',name:'Коньялты',price:'Бесплатно',desc:'Городской пляж. Шезлонг ~$4/день.'}],
+    tip:'Лара-пляж восточнее — более длинный и песчаный, но дальше от центра.',alt_hotels:[]},
+
+  termessos:{name:'Термессос',coords:[37.062,30.474],type:'wow',phase:2,day:8,
+    desc:'Греческий горный город на 1000 м — единственное место, которое Александр Великий не смог взять. Пешком 2-3 часа по лесу.',
+    hotels:[],
+    sights:[
+      {ico:'🏛️',name:'Амфитеатр Термессос',price:'В билете',desc:'Театр с невероятной панорамой горной долины'},
+      {ico:'🪦',name:'Некрополь',price:'В билете',desc:'Сотни саркофагов разбросаны по склону — впечатляюще'},
+      {ico:'🌿',name:'Лесная тропа',price:'В билете',desc:'2 км подъём через сосновый лес к руинам'},
+    ],
+    tip:'Вход €10. Ехать утром — к 10-11 уже жарко. Взять воду и удобную обувь. 25 км от Анталии.',
+    alt_hotels:[]},
+
+  duden:{name:'Водопад Дюден',coords:[36.917,30.817],type:'sight',phase:2,day:8,
+    desc:'Нижний Дюден — водопад падает прямо в Средиземное море. Смотреть с лодки или с обрыва.',
+    hotels:[],
+    sights:[{ico:'💦',name:'Нижний Дюден',price:'Бесплатно (обрыв) / $10 лодка',desc:'Уникальный водопад в море. 14 км от центра.'}],
+    tip:'Лодочная экскурсия из Старого порта ~$10. Или бесплатно смотреть с обрыва.',alt_hotels:[]},
+
+  perge:{name:'Перге',coords:[36.961,30.855],type:'sight',phase:2,day:9,
+    desc:'Большой античный город: главный проспект с колоннадой, акрополь, стадион на 12 000 мест.',
+    hotels:[],
+    sights:[{ico:'🏛️',name:'Перге',price:'€12',desc:'Колоннады, акрополь, эллинистические ворота. 2 часа. 18 км от Анталии.'}],
+    tip:'Museum Pass включает. Взять много воды. Солнце беспощадное.',alt_hotels:[]},
+
+  aspendos:{name:'Аспендос',coords:[36.939,31.172],type:'wow',phase:2,day:9,
+    desc:'Театр II века н.э., вмещает 15 000 зрителей. Сохранность 90% — один из лучших в мире. До сих пор дают концерты.',
+    hotels:[],
+    sights:[{ico:'🎭',name:'Амфитеатр Аспендос',price:'€18',desc:'Самый сохранившийся римский театр в мире. 1.5 часа. 47 км от Анталии.'}],
+    tip:'Museum Pass включает. Идти до 10 утра — потом жара невыносима.',alt_hotels:[]},
+
+  side:{name:'Сайд',coords:[36.767,31.390],type:'sight',phase:2,day:9,
+    desc:'Античные руины прямо на полуострове между двумя пляжами. Храм Аполлона на закате у воды.',
+    hotels:[{name:'Barida Hotel',area:'Сайд',price:'$50-70/ночь',stars:'★★★★'}],
+    sights:[
+      {ico:'🌊',name:'Храм Аполлона',price:'Бесплатно',desc:'Колонны у моря — одна из лучших фотографий Турции'},
+      {ico:'🏖️',name:'Пляж Сайд',price:'Бесплатно',desc:'Купаться + руины одновременно'},
+    ],
+    tip:'Хорошее место для обеда — рыбные рестораны на набережной. 75 км от Анталии.',alt_hotels:[]},
+
+  kemer:{name:'Кемер',coords:[36.601,30.561],type:'city',phase:2,day:10,
+    desc:'Курортный городок. По дороге к Фаселис. Хорошие магазины, пляж.',
+    hotels:[{name:'Palmet Resort',area:'Кемер',price:'$60-90/ночь',stars:'★★★★'}],
+    sights:[{ico:'🏖️',name:'Пляж Кемера',price:'Бесплатно',desc:'Хороший песчаный пляж'}],
+    tip:'Альтернативная ночёвка вместо Анталии если хочется ближе к Фаселис и Олимпосу.',alt_hotels:[]},
+
+  phaselis:{name:'Фаселис',coords:[36.523,30.556],type:'wow',phase:2,day:10,
+    desc:'Три пляжа + античный порт в сосновом лесу. Один из красивейших пляжей Анталии. Черепахи!',
+    hotels:[],
+    sights:[
+      {ico:'🏛️',name:'Античный порт',price:'€10 (вход в парк)',desc:'Руины прямо среди сосен у трёх бухт'},
+      {ico:'🏖️',name:'Три бухты',price:'В билете',desc:'Прозрачная вода, дикий пляж, черепахи-каретта'},
+    ],
+    tip:'60 км от Анталии. Приехать утром. Взять маску для снорклинга. Лучший пляж региона.',alt_hotels:[]},
+
+  koprulu:{name:'Каньон Кёпрюлю',coords:[37.237,31.350],type:'alt',phase:2,day:11,
+    desc:'Рафтинг по горной реке (апрель-октябрь). ~$25/чел. Полдня + дорога. 90 км от Анталии.',
+    hotels:[],
+    sights:[{ico:'🚣',name:'Рафтинг',price:'~$25/чел',desc:'Бурная горная река, уровень сложности — средний'}],
+    tip:'Альтернатива для свободного дня в Анталии. Бронировать через агентства в Анталии.',alt_hotels:[]},
+
+  olympos:{name:'Олимпос',coords:[36.398,30.478],type:'wow',phase:3,day:12,
+    desc:'Руины ликийского города прямо в джунглях у дикого пляжа. Уникальное сочетание истории и природы.',
+    hotels:[{name:'Kadir\'s Treehouses',area:'Олимпос',price:'$20-40/ночь',stars:'★★★'}],
+    sights:[
+      {ico:'🏛️',name:'Руины Олимпоса',price:'$5',desc:'Античный город I в. до н.э. среди зелени у пляжа'},
+      {ico:'🐢',name:'Дикий пляж',price:'Бесплатно',desc:'Черепахи-каретта! Один из лучших диких пляжей Турции'},
+    ],
+    tip:'Чираль — самая расслабленная деревня Турции. Ночёвка тут обязательна.',alt_hotels:[]},
+
+  yanartash:{name:'Янарташ · Вечный огонь',coords:[36.423,30.517],type:'wow',phase:3,day:12,
+    desc:'Природный вечный огонь из скал горит 2500 лет — метан выходит через расщелины. Родина мифа о Химере.',
+    hotels:[],
+    sights:[{ico:'🔥',name:'Янарташ',price:'Бесплатно',desc:'25 мин пешком от парковки. ИДТИ НОЧЬЮ с фонариком — незабываемо!'}],
+    tip:'Обязательно ночью. Взять фонарь, хорошие кроссовки. 4 км от Олимпоса.',alt_hotels:[]},
+
+  chirali:{name:'Чираль',coords:[36.412,30.485],type:'city',phase:3,day:12,
+    desc:'Самая расслабленная деревня Турции. Пляж черепах. Без машин на улицах.',
+    hotels:[
+      {name:'Arcadia Hotel Olympos',area:'Чираль',price:'$50-80/ночь',stars:'★★★★'},
+      {name:'Myland Nature Hotel',area:'Чираль',price:'$40-65/ночь',stars:'★★★★'},
+    ],
+    sights:[{ico:'🐢',name:'Пляж черепах Логгерхед',price:'Бесплатно',desc:'Охраняемое гнездовье черепах-каретта'}],
+    tip:'Вечерний запрет на огни на пляже ради черепах. Фонари только красного цвета.',alt_hotels:[]},
+
+  demre:{name:'Демре · Миры Ликийские',coords:[36.241,29.982],type:'sight',phase:3,day:13,
+    desc:'Могилы Николая Чудотворца (того самого Санта Клауса!) + ликийские гробницы в скалах.',
+    hotels:[],
+    sights:[
+      {ico:'🎅',name:'Церковь Святого Николая',price:'€12',desc:'Гробница Санта Клауса. Мозаики IV века.'},
+      {ico:'🪨',name:'Скальные гробницы Миры',price:'€12',desc:'Ликийские гробницы вырублены в отвесной скале — впечатляет'},
+    ],
+    tip:'По дороге из Чирали в Каш. Остановиться на 2-3 часа.',alt_hotels:[]},
+
+  kas:{name:'Каш',coords:[36.202,29.640],type:'wow',phase:3,day:13,
+    desc:'Маленький рыбацкий городок с бирюзовыми бухтами. Лучший ужин у воды на маршруте. Лодка к Кекова.',
+    hotels:[
+      {name:'Dragoman Boutique Hotel',area:'Каш',price:'$55-80/ночь',stars:'★★★★★'},
+      {name:'Hotel Korsan',area:'Центр',price:'$45-65/ночь',stars:'★★★★'},
+      {name:'Aquapark Hotel Kaş',area:'Побережье',price:'$50-75/ночь',stars:'★★★★'},
+    ],
+    sights:[
+      {ico:'⛵',name:'Лодка к Кекова',price:'~$20/чел',desc:'Затопленный ликийский город под водой — видно через прозрачное дно'},
+      {ico:'🪨',name:'Ликийские гробницы',price:'Бесплатно',desc:'Прямо в скалах над городом — можно трогать'},
+      {ico:'🤿',name:'Дайвинг в Каше',price:'~$40',desc:'Один из лучших дайв-спотов Турции'},
+    ],
+    tip:'Лодку к Кекова торговаться у пристани (~$20/чел в группе). Лучший ужин: рыбный ресторан «Bi Lokma».',
+    alt_hotels:[{name:'Hideaway Hotel',price:'$65-90',stars:'★★★★★'}]},
+
+  kekova:{name:'Кекова · Затопленный город',coords:[36.178,29.841],type:'wow',phase:3,day:13,
+    desc:'Ликийский город, затопленный землетрясением II века. Руины стен и лестниц видны через воду с лодки.',
+    hotels:[],
+    sights:[{ico:'🌊',name:'Подводные руины',price:'В стоимости лодки',desc:'Плыть медленно и смотреть вниз — лестницы, стены, улицы под водой'}],
+    tip:'Нырять запрещено. Смотреть только с лодки. Лучший вид — в солнечный день до полудня.',alt_hotels:[]},
+
+  butterfly:{name:'Долина Бабочек',coords:[36.540,29.083],type:'sight',phase:3,day:14,
+    desc:'Изолированная долина с водопадом, доступна только морем. Тысячи бабочек.',
+    hotels:[],
+    sights:[{ico:'🦋',name:'Kelebekler Vadisi',price:'$10-15 (катер)',desc:'На катере из Олюдениза. Дикая долина с водопадом.'}],
+    tip:'Катер из Олюдениза каждый час. Можно остаться ночевать в простых бунгало.',alt_hotels:[]},
+
+  oludeniz:{name:'Олюдениз · Синяя лагуна',coords:[36.552,29.115],type:'wow',phase:3,day:14,
+    desc:'Самый фотографируемый пляж Турции. Бирюзовая вода, горы вокруг, параглайдинг в воздухе.',
+    hotels:[
+      {name:'Yıldız Saray Hotel',area:'Фетхие',price:'$40-65/ночь',stars:'★★★★'},
+      {name:'Villa Daffodil',area:'Фетхие',price:'$45-70/ночь',stars:'★★★★'},
+    ],
+    sights:[
+      {ico:'🏖️',name:'Синяя лагуна',price:'~$2 (нац.парк)',desc:'Прозрачная бирюзовая вода в природном заповеднике'},
+      {ico:'🪂',name:'Параглайдинг с Бабадага',price:'$80-120/чел',desc:'ЛЕТАТЬ 9-11 утра — лучшая термика. 30-40 мин полёта над лагуной'},
+      {ico:'🛥️',name:'Долина Бабочек',price:'$10-15 катер',desc:'Изолированная дикая долина только морем'},
+    ],
+    tip:'Параглайдинг бронировать на месте утром, не через агентов. Сентябрь — меньше толп, вода +27°C.',
+    alt_hotels:[{name:'Ölüdeniz Resort Hotel',price:'$55-80',stars:'★★★★'}]},
+
+  babadag:{name:'Гора Бабадаг (старт парапланов)',coords:[36.548,29.132],type:'sight',phase:3,day:14,
+    desc:'Стартовая площадка параглайдинга на высоте 1969 м над уровнем моря.',
+    hotels:[],
+    sights:[{ico:'🪂',name:'Параглайдинг',price:'$80-120',desc:'Самый знаменитый тандем-полёт в Турции. 30-40 мин над Синей лагуной.'}],
+    tip:'Только с лицензированными операторами! Tandem. Лучшие: Sky Sports Ölüdeniz, Easy Riders Paragliding.',alt_hotels:[]},
+
+  fethiye:{name:'Фетхие',coords:[36.622,29.113],type:'city',phase:3,day:15,
+    desc:'База для Саклыкента, Каяккёя и лодочных прогулок. Отличный базар и рыбный рынок.',
+    hotels:[
+      {name:'Yıldız Saray Hotel',area:'Центр',price:'$40-65/ночь',stars:'★★★★'},
+      {name:'Fethiye Town Suites',area:'Центр',price:'$35-55/ночь',stars:'★★★'},
+      {name:'La Paloma Hotel',area:'Центр',price:'$45-70/ночь',stars:'★★★★'},
+    ],
+    sights:[
+      {ico:'🚢',name:'Прогулка «12 островов»',price:'$20-30/чел',desc:'Деревянный гулет, 12 бухт, снорклинг, обед на борту'},
+      {ico:'🪨',name:'Ликийские гробницы в скалах',price:'Бесплатно',desc:'Прямо над городом — уникальные гробницы IV в. до н.э.'},
+      {ico:'🐟',name:'Рыбный рынок',price:'Бесплатно',desc:'Купить рыбу и отнести в ресторан — они приготовят за копейки'},
+    ],
+    tip:'Торговаться с капитанами на пристани для прогулки «12 островов» — дешевле агентств.',
+    alt_hotels:[{name:'Hotel Villa Daffodil',price:'$50-75',stars:'★★★★'}]},
+
+  kayakoy:{name:'Каяккёй · Мёртвый город',coords:[36.584,29.090],type:'wow',phase:3,day:15,
+    desc:'Заброшенный греческий город 1923 года — греки уехали при обмене населением. Пустые дома стоят с тех пор.',
+    hotels:[],
+    sights:[{ico:'🏚️',name:'Каяккёй',price:'€3',desc:'Сотни покинутых домов на склоне горы. 1.5-2 часа. 8 км от Фетхие.'}],
+    tip:'Лучший закат маршрута. Прийти за 2 часа до темноты.',alt_hotels:[]},
+
+  saklikent:{name:'Саклыкент · Каньон',coords:[36.461,29.246],type:'wow',phase:3,day:15,
+    desc:'Каньон 300 м высотой, 18 км длиной. Идёшь по колено в ледяной горной воде между вертикальными стенами.',
+    hotels:[],
+    sights:[{ico:'🏔️',name:'Саклыкент',price:'€5',desc:'Первые 300 м — по воде ~15-20°C по щиколотку. Дальше — по камням. 20 мин от Фетхие.'}],
+    tip:'Взять сандалии или водные тапки! Голые ноги — больно по камням. Ресторан над водой у входа.',alt_hotels:[]},
+
+  pamukkale:{name:'Памуккале',coords:[37.923,29.121],type:'wow',phase:3,day:16,
+    desc:'Белые кальциевые террасы ЮНЕСКО с голубой водой. Ходить босиком — обязательно.',
+    hotels:[
+      {name:'Venus Hotel Pamukkale',area:'Памуккале',price:'$35-55/ночь',stars:'★★★★'},
+      {name:'Melrose House',area:'Памуккале',price:'$40-65/ночь',stars:'★★★★'},
+      {name:'Hotel Hal-Tur',area:'Памуккале',price:'$30-45/ночь',stars:'★★★'},
+    ],
+    sights:[
+      {ico:'🤍',name:'Белые террасы',price:'€30 (комплекс)',desc:'Ходить босиком обязательно (правило). Приходить в 8:00 или после 17:00.'},
+      {ico:'🏛️',name:'Иераполис',price:'В билете',desc:'Греко-римский город над террасами: театр, некрополь, Ворота в Аид'},
+      {ico:'🏊',name:'Бассейн Клеопатры',price:'€20 (отдельно)',desc:'Плавание среди античных колонн в термальной воде. Проверить статус ремонта!'},
+    ],
+    tip:'Вход с южной стороны — ближе к лучшим террасам. Без обуви! Возьмите пакет для обуви. Закат здесь — лучший на маршруте.',
+    alt_hotels:[{name:'Richmond Pamukkale Thermal',price:'$80-120',stars:'★★★★★'}]},
+
+  hierapolis:{name:'Иераполис',coords:[37.928,29.126],type:'sight',phase:3,day:16,
+    desc:'Античный курортный город прямо над Памуккале. Огромный некрополь, театр, Плутониум (Ворота в Аид).',
+    hotels:[],
+    sights:[
+      {ico:'🎭',name:'Театр Иераполиса',price:'В билете Памуккале',desc:'Великолепно сохранившийся театр II века н.э.'},
+      {ico:'💀',name:'Некрополь',price:'В билете',desc:'Крупнейший античный некрополь Малой Азии — тысячи саркофагов'},
+    ],
+    tip:'Обойти оба Иераполис + террасы Памуккале = 4-5 часов минимум. Воды много!',alt_hotels:[]},
+
+  ephesus:{name:'Эфес',coords:[37.940,27.342],type:'wow',phase:3,day:17,
+    desc:'Крупнейший сохранившийся античный город мира. Библиотека Цельса, театр на 25 000 мест, Храм Артемиды.',
+    hotels:[],
+    sights:[
+      {ico:'📚',name:'Библиотека Цельса',price:'В билете',desc:'Фасад II века н.э. — самая узнаваемая руина Турции'},
+      {ico:'🎭',name:'Большой театр',price:'В билете',desc:'25 000 мест. Здесь апостол Павел проповедовал.'},
+      {ico:'💒',name:'Дом Девы Марии',price:'€5 (отдельно)',desc:'Предполагаемый дом Богородицы на холме. 5 км от Эфеса.'},
+    ],
+    tip:'Вход €30. Прийти в 8:00 строго — к 10 жара +35°C и толпы. Минимум 3 часа. 80 км от Измира.',alt_hotels:[]},
+
+  izmir:{name:'Измир',coords:[38.419,27.129],type:'city',phase:3,day:17,
+    desc:'Современный космополитный город Эгейского моря. Набережная Корнадон. Финиш маршрута.',
+    hotels:[
+      {name:'Swissotel Grand Efes',area:'Корнадон',price:'$90-150/ночь',stars:'★★★★★'},
+      {name:'Mövenpick Hotel',area:'Центр',price:'$70-110/ночь',stars:'★★★★★'},
+      {name:'Kordon Hotel',area:'Набережная',price:'$50-80/ночь',stars:'★★★★'},
+    ],
+    sights:[
+      {ico:'🌊',name:'Набережная Корнадон',price:'Бесплатно',desc:'Лучшая набережная Турции. Закатный вид на залив.'},
+      {ico:'🛍️',name:'Рынок Кемер',price:'Бесплатно',desc:'Главный базар города. Специи, ткани, антиквариат.'},
+      {ico:'✈️',name:'Аэропорт ADB',price:'—',desc:'Рейсы в Ереван через Стамбул от $120. Крупный хаб.'},
+    ],
+    tip:'Аэропорт им. Аднана Мендереса (ADB) — 18 км от центра. Такси ~$15. Трамвай тоже есть.',
+    alt_hotels:[{name:'Hilton Izmir',price:'$80-130',stars:'★★★★★'}]},
+
+  bodrum:{name:'Бодрум',coords:[37.034,27.430],type:'city',phase:3,day:17,
+    desc:'Альтернативный финиш. Эгейский курорт, мавзолей Мавсола (одно из 7 чудес света), ночная жизнь.',
+    hotels:[
+      {name:'Kempinski Hotel Bodrum',area:'Гёлькёй',price:'$150-300/ночь',stars:'★★★★★'},
+      {name:'Voyage Bodrum',area:'Центр',price:'$80-130/ночь',stars:'★★★★★'},
+    ],
+    sights:[
+      {ico:'🏰',name:'Замок Святого Петра',price:'€15',desc:'Крестоносцы XV века. Внутри — Музей подводной археологии.'},
+      {ico:'⛵',name:'Бухта Бодрума',price:'Бесплатно',desc:'Яхты, пляжи, закатный вид на замок'},
+    ],
+    tip:'Аэропорт BJV (Мілас-Бодрум). Рейсы в Ереван через Стамбул от $130. 36 км от города.',
+    alt_hotels:[{name:'Divan Bodrum',price:'$100-180',stars:'★★★★★'}]},
+
+  dalaman:{name:'Даламан (аэропорт)',coords:[36.713,28.794],type:'transport',phase:3,day:17,
+    desc:'Аэропорт DLM. Ближайший к Фетхие. 160 км от Памуккале.',
+    hotels:[],
+    sights:[{ico:'✈️',name:'Аэропорт Даламан DLM',price:'—',desc:'Рейсы в Ереван через Стамбул. Рядом с Фетхие.'}],
+    tip:'Если финишируете в Фетхие — лететь отсюда. 10 км от города.',alt_hotels:[]},
+};
+
+// Alternative locations (not in main plan, shown as extra markers)
+const ALTS = [
+  {id:'sumela',name:'Монастырь Сумела',coords:[40.693,39.659],
+   desc:'Монастырь IV в. буквально вырезан в 300-метровой скале. Одно из самых нереальных мест Турции. Требует крюк через Трабзон.',
+   tip:'Вход €20. Если едете через Чёрное море — обязательно! +2 дня к маршруту.',type:'alt'},
+  {id:'uzungol',name:'Озеро Узунгёль',coords:[40.618,40.284],
+   desc:'Облака над изумрудным озером в горах. Лучшее фото из машины в Турции.',
+   tip:'По дороге Трабзон-Эрзурум. Остановка 2-3 часа.',type:'alt'},
+  {id:'trabzon',name:'Трабзон',coords:[41.003,39.726],
+   desc:'Черноморский портовый город. Знаменитая пицца «кюлеме», Хайя-София Трабзона.',
+   tip:'Альтернативный маршрут через Чёрное море. +2 дня, +400 км.',type:'alt'},
+  {id:'amasya',name:'Амасья',coords:[40.650,35.833],
+   desc:'Понтийские гробницы царей прямо в красных скалах над рекой. Один из недооценённых городов Турции.',
+   tip:'По дороге в Каппадокию через Самсун. Ночёвка обязательна.',type:'alt'},
+  {id:'ankara',name:'Анкара',coords:[39.920,32.854],
+   desc:'Столица Турции. Музей Ататюрка, Анатолийские цивилизации.',
+   tip:'Альтернативный маршрут. По пути Каппадокия-Анталия.',type:'alt'},
+  {id:'patara',name:'Пляж Патара',coords:[36.265,29.310],
+   desc:'Самый длинный пляж Турции (18 км). Защищённый пляж черепах. Рядом — руины Патары.',
+   tip:'По дороге Каш-Олюдениз. Отличная альтернатива Олюдениз без толп.',type:'alt'},
+  {id:'letoon',name:'Летоон (ЮНЕСКО)',coords:[36.354,29.275],
+   desc:'Ликийский святой город — три храма у источника. Объект ЮНЕСКО. Почти без туристов.',
+   tip:'20 мин от Каша по дороге. Остановка 1 час.',type:'alt'},
+  {id:'alanya',name:'Аланья',coords:[36.544,31.999],
+   desc:'Замок на мысе, пещера Дамлаташ, пляж Клеопатры. Альтернативная остановка после Аспендоса.',
+   tip:'75 км от Аспендоса. Если есть лишний день.',type:'alt'},
+  {id:'istanbul',name:'Стамбул',coords:[41.008,28.978],
+   desc:'Айя-София, Дворец Топкапы, Большой базар. Требует 2-3 отдельных дня.',
+   tip:'Если добавить до/после маршрута. Ереван-Стамбул от $80 перелёт.',type:'alt'},
+  // ── Дополнительные альтернативы ──
+  {id:'hattusha',name:'Хаттуша (ЮНЕСКО) — столица хеттов',coords:[40.017,34.617],
+   desc:'Столица Хеттской империи 3500 лет назад. ЮНЕСКО. Стены 8 км, скальное святилище Язылыкая. Прямо на маршруте день 4!',
+   tip:'Остановиться на 3-4 часа по дороге Эрзурум→Каппадокия. Вход €15. Взять путеводитель.',type:'alt'},
+  {id:'ihlara',name:'Долина Ихлара',coords:[38.280,34.245],
+   desc:'Каньон 14 км с пещерными церквями Х века прямо в скалах. Идёшь по реке Мелендиз. 50 км от Гёреме.',
+   tip:'Вход €5. Комбинировать с Деринкую в день 5. Взять воду и кроссовки. Вход/выход — разные точки.',type:'alt'},
+  {id:'urgup',name:'Юргюп — Вино Каппадокии',coords:[38.634,34.912],
+   desc:'Центр виноделия Каппадокии. Пещерные погреба, дегустации Emir и Öküzgözü. Альтернативная база вместо Гёреме.',
+   tip:'8 км от Гёреме. Вечерние дегустации в пещерных погребах. Менее туристично, более атмосферно.',type:'alt'},
+  {id:'afrodisias',name:'Афродисия (ЮНЕСКО)',coords:[37.709,28.724],
+   desc:'Один из лучших сохранившихся античных городов. Стадион на 30 000 мест, скульптурная школа мирового уровня. 100 км от Памуккале.',
+   tip:'Вход €20. Заехать по дороге в Измир в день 17. 2-3 часа. Не пожалеете!',type:'alt'},
+  {id:'sirince',name:'Шириндже — деревня вина',coords:[37.941,27.437],
+   desc:'Деревня греческих переселенцев с фруктовым вином. Гранатовое, персиковое, клубничное вино прямо у виноделов. 8 км от Эфеса.',
+   tip:'Приехать до 11:00 — потом толпы. Купить домой вино в глиняных кувшинах. 20 мин от Эфеса.',type:'alt'},
+  {id:'priene',name:'Приена — греческий город на горе',coords:[37.658,27.295],
+   desc:'Греческий город на уступе горы над долиной Меандра. Храм Афины, который лично заложил Александр Македонский. Без толп.',
+   tip:'Вход €12. Треугольник Приена-Милет-Дидим — идеальный день по дороге Фетхие→Бодрум/Измир.',type:'alt'},
+  {id:'didyma',name:'Дидим — Храм Аполлона',coords:[37.388,27.255],
+   desc:'Третий по величине храм античности. 122 колонны, оракул Аполлона. Рядом с пляжами Алтынкума — сочетание пляжа и руин.',
+   tip:'Вход €12. 100 км от Бодрума. Купаться в Алтынкуме после осмотра храма.',type:'alt'},
+  {id:'bergama',name:'Бергама / Пергам (ЮНЕСКО)',coords:[39.128,27.184],
+   desc:'Акрополь Пергамского царства на высоком холме. Театр с углом 80°, Алтарь Зевса. Лечебница Асклепион у подножья.',
+   tip:'90 км севернее Измира. Канатная дорога на акрополь. Если летите из Измира с запасом — обязательно.',type:'alt'},
+  {id:'marmaris',name:'Мармарис',coords:[36.855,28.266],
+   desc:'Живописная бухта, крепость, пристань с яхтами. Ворота в Грецию (паром на Родос). По пути Фетхие→Бодрум.',
+   tip:'80 км от Фетхие. Паром на Родос от $30. Морепродукты у пристани вечером — лучшие на маршруте.',type:'alt'},
+  {id:'datca',name:'Полуостров Датча и Книдос',coords:[36.726,27.688],
+   desc:'Самый дикий полуостров Турции. Деревня Датча, а на самом мысу — руины Книдоса: встреча Эгейского и Средиземного морей.',
+   tip:'+2 часа от Мармариса. Дорога через горы. Книдос — 2 часа езды до мыса. Почти без туристов.',type:'alt'},
+  {id:'bafa',name:'Озеро Бафа + Гераклея',coords:[37.492,27.568],
+   desc:'Фламинго, пеликаны, руины Гераклеи Latmos у скал. Уникальное сочетание природы и античности. Мало туристов.',
+   tip:'По пути Фетхие→Бодрум через Мугла. 30 км крюк. Лодки к руинам на острове ~$10.',type:'alt'},
+  {id:'safranbolu',name:'Сафранболу (ЮНЕСКО)',coords:[41.251,32.693],
+   desc:'Лучший сохранившийся османский город Турции. Деревянные особняки XVII в., крытый базар, хамам. ЮНЕСКО.',
+   tip:'Северный маршрут через Чёрное море. 350 км от Анкары. Ночевать обязательно.',type:'alt'},
+  {id:'avanos',name:'Аванос — гончарная деревня',coords:[38.717,34.847],
+   desc:'Центр гончарства Каппадокии. Красная глина из реки Кызылырмак. Мастер-классы по гончарному делу с 3000 до н.э.',
+   tip:'10 км от Гёреме. Сделать свою тарелку или кувшин. Хорошие кафе у реки.',type:'alt'},
+  {id:'koprulu_canyon',name:'Каньон Кёпрюлю — рафтинг',coords:[37.237,31.350],
+   desc:'Рафтинг по горной реке апрель-октябрь. ~$25/чел. Римский мост Олук в глубине каньона.',
+   tip:'90 км от Анталии. Полдня. Бронировать через агентства в Анталии. Уровень — средний.',type:'alt'},
+  {id:'olympos_cable',name:'Канатная дорога Тахталы',coords:[36.528,30.484],
+   desc:'Вершина горы Тахталы (2365 м) над Средиземным морем на канатной дороге. Вид на 200 км вокруг.',
+   tip:'30 км от Анталии, рядом с Кемером. Билет ~$30. Температура на вершине ниже на 15°C — взять куртку.',type:'alt'},
+];
+
+// Danger zones (Level 4) - rough polygon overlay
+const DANGER_POLYGON = [
+  [39.8,34.5],[39.8,44.8],[37.5,44.8],[37.5,43.5],
+  [36.8,43.0],[36.2,41.0],[36.0,38.5],[36.0,35.5],
+  [36.8,34.5],[39.8,34.5]
+];
+
+const PHASE_COLORS = {1:'#3b82f6',2:'#f97316',3:'#22c55e'};
+
+// ══════════════════════════════════════════════════
+// MAP SETUP
+// ══════════════════════════════════════════════════
+const map = L.map('map', {
+  center:[38.5,35.0], zoom:6,
+  zoomControl:true,
+  attributionControl:true
+});
+
+const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19, attribution:'© OpenStreetMap'
+});
+const cartoLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+  maxZoom:19, attribution:'© CartoDB'
+});
+const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+  maxZoom:19, attribution:'© Esri'
+});
+
+cartoLayer.addTo(map);
+
+// Route polylines
+const poly1 = L.polyline(ROUTE_P1, {color:'#3b82f6',weight:4,opacity:.8,dashArray:null}).addTo(map);
+const poly2 = L.polyline(ROUTE_P2, {color:'#f97316',weight:4,opacity:.8}).addTo(map);
+const poly3 = L.polyline(ROUTE_P3, {color:'#22c55e',weight:4,opacity:.8}).addTo(map);
+
+// Danger zone polygon
+let dangerLayer = L.polygon(DANGER_POLYGON,{
+  color:'#ef4444',fillColor:'#ef4444',fillOpacity:.18,
+  weight:1.5,opacity:.5,dashArray:'6,4'
+});
+let dangerLabel = L.marker([38.2,40.0],{
+  icon:L.divIcon({className:'',html:'<div style="background:rgba(239,68,68,.85);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.4)">⚠️ Level 4 — НЕ ЕХАТЬ</div>',iconAnchor:[0,0]})
+});
+
+// ══════════════════════════════════════════════════
+// MARKERS
+// ══════════════════════════════════════════════════
+
+let allMarkers = {};
+let altMarkers = [];
+let gpsMarker = null;
+
+const TYPE_ICONS = {
+  city:'🏙️', wow:'⭐', sight:'🏛️', border:'🛂',
+  transport:'✈️', alt:'💜', start:'🚩'
+};
+
+function makeMarkerIcon(loc, dayNum) {
+  const isWow = loc.type === 'wow';
+  const isAlt = loc.type === 'alt';
+  const isBorder = loc.type === 'border';
+  const phase = loc.phase || 0;
+  const color = PHASE_COLORS[phase] || '#64748b';
+
+  if(isAlt) {
+    return L.divIcon({
+      className:'',
+      html:`<div style="width:30px;height:30px;background:#a78bfa;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer">💜</div>`,
+      iconSize:[30,30],iconAnchor:[15,15]
+    });
+  }
+  if(isBorder) {
+    return L.divIcon({
+      className:'',
+      html:`<div style="width:30px;height:30px;background:#64748b;border:2px solid #fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer">🛂</div>`,
+      iconSize:[30,30],iconAnchor:[15,15]
+    });
+  }
+  if(isWow) {
+    return L.divIcon({
+      className:'',
+      html:`<div style="width:36px;height:36px;background:${color};border:2.5px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 10px rgba(0,0,0,.5);cursor:pointer">⭐</div>`,
+      iconSize:[36,36],iconAnchor:[18,18]
+    });
+  }
+  const label = dayNum ? dayNum : (TYPE_ICONS[loc.type] || '📍');
+  const isNum = !!dayNum;
+  return L.divIcon({
+    className:'',
+    html:`<div style="min-width:30px;height:30px;padding:0 6px;background:${color};border:2px solid #fff;border-radius:${isNum?'50%':'8px'};display:flex;align-items:center;justify-content:center;font-size:${isNum?'12px':'14px'};font-weight:${isNum?700:400};color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer">${label}</div>`,
+    iconSize:[30,30],iconAnchor:[15,15]
+  });
+}
+
+function buildPopupHTML(locId, loc) {
+  const dayInfo = DAYS.find(d=>d.locs && d.locs.includes(locId) && d.main===locId);
+  const dayNum = dayInfo ? `День ${dayInfo.n}` : '';
+  return `<div>
+    <div class="pop-title">${loc.name}</div>
+    <div class="pop-sub">${dayNum ? dayNum+' · ' : ''}${loc.type==='wow'?'★ WOW место':loc.type==='border'?'Граница':loc.type==='alt'?'Альтернатива':'Остановка'}</div>
+    <button class="pop-more" onclick="showDetail('${locId}')">Подробнее →</button>
+  </div>`;
+}
+
+function renderMarkers() {
+  // Night stop markers (numbered by day)
+  DAYS.forEach(d=>{
+    const loc = LOCS[d.main];
+    if(!loc) return;
+    if(allMarkers[d.main]) return; // already added
+    const m = L.marker(loc.coords, {icon: makeMarkerIcon(loc, d.n)}).addTo(map);
+    m.bindPopup(buildPopupHTML(d.main, loc));
+    m.on('click',()=>showDetail(d.main));
+    allMarkers[d.main] = m;
+  });
+
+  // Additional sight markers (non-main locs in each day)
+  DAYS.forEach(d=>{
+    d.locs.forEach(lid=>{
+      if(lid === d.main) return;
+      const loc = LOCS[lid];
+      if(!loc || allMarkers[lid]) return;
+      const m = L.marker(loc.coords, {icon: makeMarkerIcon(loc)});
+      m.bindPopup(buildPopupHTML(lid, loc));
+      m.on('click',()=>showDetail(lid));
+      m.addTo(map);
+      allMarkers[lid] = m;
+    });
+  });
+}
+
+function renderAltMarkers() {
+  altMarkers.forEach(m=>map.removeLayer(m));
+  altMarkers = [];
+  ALTS.forEach(a=>{
+    const m = L.marker(a.coords, {
+      icon: L.divIcon({
+        className:'',
+        html:`<div style="width:32px;height:32px;background:#7c3aed;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer">💜</div>`,
+        iconSize:[32,32],iconAnchor:[16,16]
+      })
+    });
+    m.bindPopup(`<div>
+      <div class="pop-title">${a.name}</div>
+      <div class="pop-sub">Альтернативное место</div>
+      <div style="font-size:11px;color:var(--muted);margin:6px 0">${a.desc}</div>
+      <button class="pop-more" onclick="showAltDetail('${a.id}')">Подробнее →</button>
+    </div>`);
+    altMarkers.push(m);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════════════════
+
+let currentPhase = 0;
+let currentDay = 1;
+
+function filterPhase(p) {
+  currentPhase = p;
+  ['tab0','tab1','tab2','tab3'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('a', i===p);
+  });
+  renderSidebar();
+}
+
+function renderSidebar() {
+  const list = document.getElementById('daylist');
+  const days = currentPhase===0 ? DAYS : DAYS.filter(d=>d.phase===currentPhase);
+  list.innerHTML = days.map(d=>{
+    const ph = PHASE_COLORS[d.phase];
+    const wows = d.wow>=5?'⭐⭐⭐':d.wow>=4?'⭐⭐':d.wow>=3?'⭐':'';
+    return `<div class="ditem${d.n===currentDay?' a':''}" onclick="selectDay(${d.n})">
+      <div class="drow">
+        <div class="dnum" style="background:${ph}">${d.n}</div>
+        <div class="dtitle">${d.from} → ${d.to}</div>
+        <div class="dkm">${d.km>0?d.km+' км':'дн.'}</div>
+      </div>
+      <div class="dsub">${d.sum}</div>
+      <div class="dwow">${wows}</div>
+    </div>`;
+  }).join('');
+}
+
+function closeSidebar() {
+  document.getElementById('sb').classList.remove('mob-open');
+  document.getElementById('mob-overlay').classList.remove('show');
+}
+function openSidebar() {
+  document.getElementById('sb').classList.add('mob-open');
+  document.getElementById('mob-overlay').classList.add('show');
+}
+
+function selectDay(n) {
+  currentDay = n;
+  renderSidebar();
+  if(window.innerWidth <= 768) closeSidebar();
+  const d = DAYS.find(x=>x.n===n);
+  if(!d) return;
+  const loc = LOCS[d.main];
+  if(loc) {
+    map.flyTo(loc.coords, 11, {duration:1.2});
+    setTimeout(()=>{
+      if(allMarkers[d.main]) allMarkers[d.main].openPopup();
+    }, 1400);
+    showDetail(d.main);
+  }
+}
+
+// ══════════════════════════════════════════════════
+// DETAIL PANEL
+// ══════════════════════════════════════════════════
+
+function buildNavigationButtons(lat, lon, name) {
+  const label = encodeURIComponent(name || 'Destination');
+  const osmandUrl = `https://osmand.net/map/navigate/?finish=${lat},${lon}&type=osmand&profile=car&pin=${lat},${lon}#14/${lat}/${lon}`;
+  const organicUrl = `https://omaps.app/v2/nav?origin=currentLocation&destination=${lat},${lon}&destination_name=${label}&mode=drive`;
+  return `<div class="nav-btns">
+    <a class="nav-btn nav-gm" href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=driving" target="_blank" rel="noopener noreferrer">
+      🗺️ Google Maps
+    </a>
+    <a class="nav-btn nav-ym" href="https://yandex.ru/maps/?ll=${lon},${lat}&z=14&pt=${lon},${lat},pm2rdl" target="_blank" rel="noopener noreferrer">
+      🗺️ Яндекс
+    </a>
+    <a class="nav-btn nav-osm" href="${osmandUrl}" target="_blank" rel="noopener noreferrer">
+      🧭 OsmAnd
+    </a>
+    <a class="nav-btn nav-om" href="${organicUrl}" target="_blank" rel="noopener noreferrer">
+      🧭 Organic
+    </a>
+  </div>`;
+}
+
+function showDetail(locId) {
+  const loc = LOCS[locId];
+  if(!loc) return;
+
+  const dayInfo = DAYS.find(d=>d.main===locId);
+  const phColor = PHASE_COLORS[loc.phase] || '#64748b';
+  const typeLabels = {city:'Город',wow:'⭐ WOW место',sight:'Достопримечательность',
+    border:'Граница',transport:'Транспорт',start:'Старт',alt:'Альтернатива'};
+
+  document.getElementById('det-type').textContent = typeLabels[loc.type]||loc.type;
+  document.getElementById('det-type').style.background = loc.type==='wow'?'rgba(234,179,8,.2)':loc.type==='border'?'rgba(100,116,139,.2)':'rgba(249,115,22,.15)';
+  document.getElementById('det-type').style.color = loc.type==='wow'?'#fbbf24':loc.type==='border'?'#94a3b8':'#f97316';
+  document.getElementById('det-name').textContent = loc.name;
+  document.getElementById('det-day').textContent = dayInfo ? `День ${dayInfo.n} · Фаза ${dayInfo.phase}` : '';
+  document.getElementById('det-desc').textContent = loc.desc;
+
+  let body = '';
+
+  // Hotels
+  if(loc.hotels && loc.hotels.length) {
+    body += `<div class="sec-title">🏨 Отели</div>`;
+    loc.hotels.forEach(h=>{
+      const bookUrl = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(h.name)}&checkin_year=2026&checkin_month=9&checkout_year=2026&checkout_month=9&group_adults=2`;
+      body += `<div class="hotel-card">
+        <div class="hotel-name">${h.name}</div>
+        <div class="hotel-area">${h.area||''}</div>
+        <div class="hotel-stars">${h.stars}</div>
+        <div class="hotel-price">${h.price}</div>
+        <a class="hotel-book" href="${bookUrl}" target="_blank">🌐 Booking.com</a>
+      </div>`;
+    });
+    if(loc.alt_hotels && loc.alt_hotels.length) {
+      loc.alt_hotels.forEach(h=>{
+        const bookUrl = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(h.name)}&checkin_year=2026&checkin_month=9&checkout_year=2026&checkout_month=9&group_adults=2`;
+        body += `<div class="hotel-card" style="border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.06)">
+          <div style="font-size:9px;font-weight:700;color:#a78bfa;text-transform:uppercase;margin-bottom:4px">Альтернатива</div>
+          <div class="hotel-name">${h.name}</div>
+          <div class="hotel-stars">${h.stars}</div>
+          <div class="hotel-price">${h.price}</div>
+          <a class="hotel-book" href="${bookUrl}" target="_blank">🌐 Booking.com</a>
+        </div>`;
+      });
+    }
+  }
+
+  // Sights
+  if(loc.sights && loc.sights.length) {
+    body += `<div class="sec-title">🗺️ Что смотреть</div>`;
+    loc.sights.forEach(s=>{
+      body += `<div class="att-item">
+        <div class="att-ico">${s.ico||'🏛️'}</div>
+        <div>
+          <div class="att-name">${s.name}</div>
+          <div class="att-desc">${s.desc}</div>
+          <div class="att-price">${s.price}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  // Tip
+  if(loc.tip) {
+    body += `<div class="sec-title">💡 Советы</div>
+      <div class="tip-box">${loc.tip}</div>`;
+  }
+
+  // Navigation buttons
+  const [lat,lon] = loc.coords;
+  body += buildNavigationButtons(lat, lon, loc.name);
+
+  document.getElementById('det-body').innerHTML = body;
+  document.getElementById('det').classList.add('open');
+}
+
+function showAltDetail(altId) {
+  const a = ALTS.find(x=>x.id===altId);
+  if(!a) return;
+  document.getElementById('det-type').textContent = 'Альтернативное место';
+  document.getElementById('det-type').style.background = 'rgba(167,139,250,.2)';
+  document.getElementById('det-type').style.color = '#a78bfa';
+  document.getElementById('det-name').textContent = a.name;
+  document.getElementById('det-day').textContent = 'Не в основном маршруте';
+  document.getElementById('det-desc').textContent = a.desc;
+
+  const [lat,lon] = a.coords;
+  document.getElementById('det-body').innerHTML = `
+    <div class="tip-box">${a.tip}</div>
+    ${buildNavigationButtons(lat, lon, a.name)}`;
+  document.getElementById('det').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('det').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════════
+// CONTROLS
+// ══════════════════════════════════════════════════
+
+let layers = {sat:false, danger:false, alt:false};
+let infoRendered = false;
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[ch]);
+}
+
+function renderInlineMarkdown(value) {
+  return escapeHtml(value)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
+function splitTableRow(line) {
+  return line.trim().replace(/^\|/, '').replace(/\|$/, '')
+    .split('|').map(cell => cell.trim());
+}
+
+function renderInfoMarkdown(markdown) {
+  const lines = markdown.replace(/\r\n/g, '\n').split('\n');
+  let html = '';
+  let list = null;
+  let inCode = false;
+  let codeLines = [];
+  const closeList = () => {
+    if(list) { html += `</${list}>`; list = null; }
+  };
+
+  for(let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    if(trimmed.startsWith('```')) {
+      closeList();
+      if(inCode) {
+        html += `<pre><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`;
+        codeLines = [];
+        inCode = false;
+      } else {
+        inCode = true;
+      }
+      continue;
+    }
+
+    if(inCode) { codeLines.push(line); continue; }
+    if(!trimmed) { closeList(); continue; }
+
+    if(/^\|.*\|$/.test(trimmed) && i + 1 < lines.length &&
+       /^\|?[\s:-]+(?:\|[\s:-]+)+\|?$/.test(lines[i + 1].trim())) {
+      closeList();
+      const headers = splitTableRow(trimmed);
+      const rows = [];
+      i += 2;
+      while(i < lines.length && /^\|.*\|$/.test(lines[i].trim())) {
+        rows.push(splitTableRow(lines[i]));
+        i++;
+      }
+      i--;
+      html += '<div class="md-table-wrap"><table><thead><tr>';
+      html += headers.map(cell => `<th>${renderInlineMarkdown(cell)}</th>`).join('');
+      html += '</tr></thead><tbody>';
+      html += rows.map(row => `<tr>${headers.map((_, idx) =>
+        `<td>${renderInlineMarkdown(row[idx] || '')}</td>`).join('')}</tr>`).join('');
+      html += '</tbody></table></div>';
+      continue;
+    }
+
+    if(/^---+$/.test(trimmed)) { closeList(); html += '<hr>'; continue; }
+
+    const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+    if(heading) {
+      closeList();
+      const level = heading[1].length;
+      html += `<h${level}>${renderInlineMarkdown(heading[2])}</h${level}>`;
+      continue;
+    }
+
+    if(trimmed.startsWith('> ')) {
+      closeList();
+      html += `<blockquote>${renderInlineMarkdown(trimmed.slice(2))}</blockquote>`;
+      continue;
+    }
+
+    const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
+    if(ordered) {
+      if(list !== 'ol') { closeList(); list = 'ol'; html += '<ol>'; }
+      html += `<li>${renderInlineMarkdown(ordered[1])}</li>`;
+      continue;
+    }
+
+    const unordered = trimmed.match(/^[-*]\s+(.+)$/);
+    if(unordered) {
+      if(list !== 'ul') { closeList(); list = 'ul'; html += '<ul>'; }
+      html += `<li>${renderInlineMarkdown(unordered[1])}</li>`;
+      continue;
+    }
+
+    closeList();
+    html += `<p>${renderInlineMarkdown(trimmed)}</p>`;
+  }
+
+  closeList();
+  if(inCode) html += `<pre><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`;
+  return html;
+}
+
+function renderTripInfo() {
+  if(infoRendered) return;
+  const source = document.getElementById('trip-info-source');
+  const content = document.getElementById('info-content');
+  content.innerHTML = renderInfoMarkdown(source.textContent.trim());
+  infoRendered = true;
+}
+
+function openInfoModal() {
+  renderTripInfo();
+  closeDetail();
+  const modal = document.getElementById('info-modal');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('body-info-open');
+}
+
+function closeInfoModal() {
+  const modal = document.getElementById('info-modal');
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('body-info-open');
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeInfoModal();
+});
+
+function toggleLayer(name) {
+  layers[name] = !layers[name];
+  const btn = document.getElementById('btn-'+name);
+  btn.classList.toggle('on', layers[name]);
+
+  if(name==='sat') {
+    if(layers.sat) { map.removeLayer(cartoLayer); satLayer.addTo(map); }
+    else { map.removeLayer(satLayer); cartoLayer.addTo(map); }
+  }
+  if(name==='danger') {
+    if(layers.danger) { dangerLayer.addTo(map); dangerLabel.addTo(map); }
+    else { map.removeLayer(dangerLayer); map.removeLayer(dangerLabel); }
+  }
+  if(name==='alt') {
+    if(layers.alt) { altMarkers.forEach(m=>m.addTo(map)); }
+    else { altMarkers.forEach(m=>map.removeLayer(m)); }
+  }
+}
+
+function gotoGPS() {
+  if(!navigator.geolocation) { alert('Геолокация не поддерживается.'); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat=pos.coords.latitude, lon=pos.coords.longitude;
+    map.flyTo([lat,lon],14,{duration:1.5});
+    if(gpsMarker) map.removeLayer(gpsMarker);
+    gpsMarker = L.marker([lat,lon],{
+      icon:L.divIcon({
+        className:'',
+        html:'<div class="gps-dot"></div>',
+        iconSize:[14,14],iconAnchor:[7,7]
+      })
+    }).addTo(map).bindPopup('📍 Вы здесь').openPopup();
+  }, err=>{
+    alert('Не удалось получить местоположение. Разрешите доступ к геолокации.');
+  });
+}
+
+// Close detail when clicking map
+map.on('click',()=>closeDetail());
+
+// ══════════════════════════════════════════════════
+// OFFLINE DETECTION
+// ══════════════════════════════════════════════════
+function updateOnlineStatus() {
+  document.getElementById('offline-badge').classList.toggle('show', !navigator.onLine);
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ══════════════════════════════════════════════════
+// SERVICE WORKER
+// ══════════════════════════════════════════════════
+if('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => {
+      console.warn('Service worker registration failed:', err);
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+renderMarkers();
+renderAltMarkers();
+renderSidebar();
+
+// Fit map to main route
+setTimeout(()=>{
+  const allCoords = [...ROUTE_P1,...ROUTE_P2,...ROUTE_P3];
+  map.fitBounds(L.latLngBounds(allCoords), {padding:[40,40]});
+},200);
+
+// HGS reminder on first load
+setTimeout(()=>{
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#f97316;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.4);cursor:pointer;max-width:90%;text-align:center';
+  msg.textContent = '⚠️ Напомнение: HGS транспондер обязателен! Оформить в PTT у границы. Без него штраф ×10.';
+  msg.onclick = ()=>msg.remove();
+  document.body.appendChild(msg);
+  setTimeout(()=>msg.remove(), 8000);
+},1500);
+</script>
+</body>
+</html>

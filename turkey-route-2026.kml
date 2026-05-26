@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Turkey 2026 Route</name>
+    <Placemark>
+      <name>Turkey 2026 Main Route</name>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          44.4991,40.1792,0
+          43.473,41.115,0
+          43.000,41.640,0
+          42.940,41.325,0
+          43.097,40.601,0
+          43.572,40.507,0
+          43.097,40.601,0
+          41.267,39.905,0
+          34.829,38.643,0
+          32.493,37.874,0
+          30.702,36.887,0
+          30.702,36.887,0
+          30.474,37.062,0
+          30.702,36.887,0
+          30.855,36.961,0
+          31.172,36.939,0
+          30.702,36.887,0
+          30.556,36.523,0
+          30.702,36.887,0
+          30.702,36.887,0
+          30.478,36.398,0
+          29.640,36.202,0
+          29.115,36.552,0
+          29.113,36.622,0
+          29.246,36.461,0
+          29.121,37.923,0
+          27.342,37.940,0
+          27.129,38.419,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark><name>Ереван</name><description>yerevan</description><Point><coordinates>44.4991,40.1792,0</coordinates></Point></Placemark>
+    <Placemark><name>Граница Баврa / Ниноцминда</name><description>bavra</description><Point><coordinates>43.473,41.115,0</coordinates></Point></Placemark>
+    <Placemark><name>Ахалцихе</name><description>akhaltsikhe</description><Point><coordinates>43.000,41.640,0</coordinates></Point></Placemark>
+    <Placemark><name>Граница Vale / Türkgözü</name><description>vale</description><Point><coordinates>42.940,41.325,0</coordinates></Point></Placemark>
+    <Placemark><name>Карс</name><description>kars</description><Point><coordinates>43.097,40.601,0</coordinates></Point></Placemark>
+    <Placemark><name>Руины Ани</name><description>ani</description><Point><coordinates>43.572,40.507,0</coordinates></Point></Placemark>
+    <Placemark><name>Эрзурум</name><description>erzurum</description><Point><coordinates>41.267,39.905,0</coordinates></Point></Placemark>
+    <Placemark><name>Сивас (альтернатива)</name><description>sivas</description><Point><coordinates>37.016,39.748,0</coordinates></Point></Placemark>
+    <Placemark><name>Гёреме · Каппадокия</name><description>goreme</description><Point><coordinates>34.829,38.643,0</coordinates></Point></Placemark>
+    <Placemark><name>Точка старта шаров</name><description>balloon_point</description><Point><coordinates>34.845,38.670,0</coordinates></Point></Placemark>
+    <Placemark><name>Деринкую (подземный город)</name><description>derinkuyu</description><Point><coordinates>34.735,38.373,0</coordinates></Point></Placemark>
+    <Placemark><name>Долина Пашабаг</name><description>pashabag</description><Point><coordinates>34.787,38.683,0</coordinates></Point></Placemark>
+    <Placemark><name>Долина Любви</name><description>love_valley</description><Point><coordinates>34.829,38.657,0</coordinates></Point></Placemark>
+    <Placemark><name>Конья</name><description>konya</description><Point><coordinates>32.493,37.874,0</coordinates></Point></Placemark>
+    <Placemark><name>Анталия</name><description>antalya</description><Point><coordinates>30.702,36.887,0</coordinates></Point></Placemark>
+    <Placemark><name>Калейчи — Старый город</name><description>kaleici</description><Point><coordinates>30.706,36.887,0</coordinates></Point></Placemark>
+    <Placemark><name>Музей Анталии</name><description>antalya_museum</description><Point><coordinates>30.685,36.879,0</coordinates></Point></Placemark>
+    <Placemark><name>Пляж Коньялты</name><description>konyaalti</description><Point><coordinates>30.634,36.870,0</coordinates></Point></Placemark>
+    <Placemark><name>Термессос</name><description>termessos</description><Point><coordinates>30.474,37.062,0</coordinates></Point></Placemark>
+    <Placemark><name>Водопад Дюден</name><description>duden</description><Point><coordinates>30.817,36.917,0</coordinates></Point></Placemark>
+    <Placemark><name>Перге</name><description>perge</description><Point><coordinates>30.855,36.961,0</coordinates></Point></Placemark>
+    <Placemark><name>Аспендос</name><description>aspendos</description><Point><coordinates>31.172,36.939,0</coordinates></Point></Placemark>
+    <Placemark><name>Сайд</name><description>side</description><Point><coordinates>31.390,36.767,0</coordinates></Point></Placemark>
+    <Placemark><name>Кемер</name><description>kemer</description><Point><coordinates>30.561,36.601,0</coordinates></Point></Placemark>
+    <Placemark><name>Фаселис</name><description>phaselis</description><Point><coordinates>30.556,36.523,0</coordinates></Point></Placemark>
+    <Placemark><name>Каньон Кёпрюлю</name><description>koprulu</description><Point><coordinates>31.350,37.237,0</coordinates></Point></Placemark>
+    <Placemark><name>Олимпос</name><description>olympos</description><Point><coordinates>30.478,36.398,0</coordinates></Point></Placemark>
+    <Placemark><name>Янарташ · Вечный огонь</name><description>yanartash</description><Point><coordinates>30.517,36.423,0</coordinates></Point></Placemark>
+    <Placemark><name>Чираль</name><description>chirali</description><Point><coordinates>30.485,36.412,0</coordinates></Point></Placemark>
+    <Placemark><name>Демре · Миры Ликийские</name><description>demre</description><Point><coordinates>29.982,36.241,0</coordinates></Point></Placemark>
+    <Placemark><name>Каш</name><description>kas</description><Point><coordinates>29.640,36.202,0</coordinates></Point></Placemark>
+    <Placemark><name>Кекова · Затопленный город</name><description>kekova</description><Point><coordinates>29.841,36.178,0</coordinates></Point></Placemark>
+    <Placemark><name>Долина Бабочек</name><description>butterfly</description><Point><coordinates>29.083,36.540,0</coordinates></Point></Placemark>
+    <Placemark><name>Олюдениз · Синяя лагуна</name><description>oludeniz</description><Point><coordinates>29.115,36.552,0</coordinates></Point></Placemark>
+    <Placemark><name>Гора Бабадаг (старт парапланов)</name><description>babadag</description><Point><coordinates>29.132,36.548,0</coordinates></Point></Placemark>
+    <Placemark><name>Фетхие</name><description>fethiye</description><Point><coordinates>29.113,36.622,0</coordinates></Point></Placemark>
+    <Placemark><name>Каяккёй · Мёртвый город</name><description>kayakoy</description><Point><coordinates>29.090,36.584,0</coordinates></Point></Placemark>
+    <Placemark><name>Саклыкент · Каньон</name><description>saklikent</description><Point><coordinates>29.246,36.461,0</coordinates></Point></Placemark>
+    <Placemark><name>Памуккале</name><description>pamukkale</description><Point><coordinates>29.121,37.923,0</coordinates></Point></Placemark>
+    <Placemark><name>Иераполис</name><description>hierapolis</description><Point><coordinates>29.126,37.928,0</coordinates></Point></Placemark>
+    <Placemark><name>Эфес</name><description>ephesus</description><Point><coordinates>27.342,37.940,0</coordinates></Point></Placemark>
+    <Placemark><name>Измир</name><description>izmir</description><Point><coordinates>27.129,38.419,0</coordinates></Point></Placemark>
+    <Placemark><name>Бодрум</name><description>bodrum</description><Point><coordinates>27.430,37.034,0</coordinates></Point></Placemark>
+    <Placemark><name>Даламан (аэропорт)</name><description>dalaman</description><Point><coordinates>28.794,36.713,0</coordinates></Point></Placemark>
+    <Placemark><name>Монастырь Сумела</name><description>sumela</description><Point><coordinates>39.659,40.693,0</coordinates></Point></Placemark>
+    <Placemark><name>Озеро Узунгёль</name><description>uzungol</description><Point><coordinates>40.284,40.618,0</coordinates></Point></Placemark>
+    <Placemark><name>Трабзон</name><description>trabzon</description><Point><coordinates>39.726,41.003,0</coordinates></Point></Placemark>
+    <Placemark><name>Амасья</name><description>amasya</description><Point><coordinates>35.833,40.650,0</coordinates></Point></Placemark>
+    <Placemark><name>Анкара</name><description>ankara</description><Point><coordinates>32.854,39.920,0</coordinates></Point></Placemark>
+    <Placemark><name>Пляж Патара</name><description>patara</description><Point><coordinates>29.310,36.265,0</coordinates></Point></Placemark>
+    <Placemark><name>Летоон (ЮНЕСКО)</name><description>letoon</description><Point><coordinates>29.275,36.354,0</coordinates></Point></Placemark>
+    <Placemark><name>Аланья</name><description>alanya</description><Point><coordinates>31.999,36.544,0</coordinates></Point></Placemark>
+    <Placemark><name>Стамбул</name><description>istanbul</description><Point><coordinates>28.978,41.008,0</coordinates></Point></Placemark>
+    <Placemark><name>Хаттуша (ЮНЕСКО) — столица хеттов</name><description>hattusha</description><Point><coordinates>34.617,40.017,0</coordinates></Point></Placemark>
+    <Placemark><name>Долина Ихлара</name><description>ihlara</description><Point><coordinates>34.245,38.280,0</coordinates></Point></Placemark>
+    <Placemark><name>Юргюп — Вино Каппадокии</name><description>urgup</description><Point><coordinates>34.912,38.634,0</coordinates></Point></Placemark>
+    <Placemark><name>Афродисия (ЮНЕСКО)</name><description>afrodisias</description><Point><coordinates>28.724,37.709,0</coordinates></Point></Placemark>
+    <Placemark><name>Шириндже — деревня вина</name><description>sirince</description><Point><coordinates>27.437,37.941,0</coordinates></Point></Placemark>
+    <Placemark><name>Приена — греческий город на горе</name><description>priene</description><Point><coordinates>27.295,37.658,0</coordinates></Point></Placemark>
+    <Placemark><name>Дидим — Храм Аполлона</name><description>didyma</description><Point><coordinates>27.255,37.388,0</coordinates></Point></Placemark>
+    <Placemark><name>Бергама / Пергам (ЮНЕСКО)</name><description>bergama</description><Point><coordinates>27.184,39.128,0</coordinates></Point></Placemark>
+    <Placemark><name>Мармарис</name><description>marmaris</description><Point><coordinates>28.266,36.855,0</coordinates></Point></Placemark>
+    <Placemark><name>Полуостров Датча и Книдос</name><description>datca</description><Point><coordinates>27.688,36.726,0</coordinates></Point></Placemark>
+    <Placemark><name>Озеро Бафа + Гераклея</name><description>bafa</description><Point><coordinates>27.568,37.492,0</coordinates></Point></Placemark>
+    <Placemark><name>Сафранболу (ЮНЕСКО)</name><description>safranbolu</description><Point><coordinates>32.693,41.251,0</coordinates></Point></Placemark>
+    <Placemark><name>Аванос — гончарная деревня</name><description>avanos</description><Point><coordinates>34.847,38.717,0</coordinates></Point></Placemark>
+    <Placemark><name>Каньон Кёпрюлю — рафтинг</name><description>koprulu_canyon</description><Point><coordinates>31.350,37.237,0</coordinates></Point></Placemark>
+    <Placemark><name>Канатная дорога Тахталы</name><description>olympos_cable</description><Point><coordinates>30.484,36.528,0</coordinates></Point></Placemark>
+  </Document>
+</kml>

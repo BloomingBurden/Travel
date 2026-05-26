@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-Content \"c:\\\\Users\\\\flowe\\\\OneDrive\\\\Desktop\\\\Travel\\\\turkey_map.html\")",
+      "Bash(Measure-Object -Line)",
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\flowe\\\\OneDrive\\\\Desktop\\\\Travel\\\\turkey_map.html\" | Measure-Object -Line\\).Lines)",
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\flowe\\\\OneDrive\\\\Desktop\\\\Travel\\\\turkey_map.html\"\\).Count)"
+    ]
+  }
+}

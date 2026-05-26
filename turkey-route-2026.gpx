@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Turkey 2026 Navigator" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Turkey 2026 Route</name>
+  </metadata>
+  <wpt lat="40.1792" lon="44.4991"><name>Ереван</name><desc>yerevan</desc></wpt>
+  <wpt lat="41.115" lon="43.473"><name>Граница Баврa / Ниноцминда</name><desc>bavra</desc></wpt>
+  <wpt lat="41.640" lon="43.000"><name>Ахалцихе</name><desc>akhaltsikhe</desc></wpt>
+  <wpt lat="41.325" lon="42.940"><name>Граница Vale / Türkgözü</name><desc>vale</desc></wpt>
+  <wpt lat="40.601" lon="43.097"><name>Карс</name><desc>kars</desc></wpt>
+  <wpt lat="40.507" lon="43.572"><name>Руины Ани</name><desc>ani</desc></wpt>
+  <wpt lat="39.905" lon="41.267"><name>Эрзурум</name><desc>erzurum</desc></wpt>
+  <wpt lat="39.748" lon="37.016"><name>Сивас (альтернатива)</name><desc>sivas</desc></wpt>
+  <wpt lat="38.643" lon="34.829"><name>Гёреме · Каппадокия</name><desc>goreme</desc></wpt>
+  <wpt lat="38.670" lon="34.845"><name>Точка старта шаров</name><desc>balloon_point</desc></wpt>
+  <wpt lat="38.373" lon="34.735"><name>Деринкую (подземный город)</name><desc>derinkuyu</desc></wpt>
+  <wpt lat="38.683" lon="34.787"><name>Долина Пашабаг</name><desc>pashabag</desc></wpt>
+  <wpt lat="38.657" lon="34.829"><name>Долина Любви</name><desc>love_valley</desc></wpt>
+  <wpt lat="37.874" lon="32.493"><name>Конья</name><desc>konya</desc></wpt>
+  <wpt lat="36.887" lon="30.702"><name>Анталия</name><desc>antalya</desc></wpt>
+  <wpt lat="36.887" lon="30.706"><name>Калейчи — Старый город</name><desc>kaleici</desc></wpt>
+  <wpt lat="36.879" lon="30.685"><name>Музей Анталии</name><desc>antalya_museum</desc></wpt>
+  <wpt lat="36.870" lon="30.634"><name>Пляж Коньялты</name><desc>konyaalti</desc></wpt>
+  <wpt lat="37.062" lon="30.474"><name>Термессос</name><desc>termessos</desc></wpt>
+  <wpt lat="36.917" lon="30.817"><name>Водопад Дюден</name><desc>duden</desc></wpt>
+  <wpt lat="36.961" lon="30.855"><name>Перге</name><desc>perge</desc></wpt>
+  <wpt lat="36.939" lon="31.172"><name>Аспендос</name><desc>aspendos</desc></wpt>
+  <wpt lat="36.767" lon="31.390"><name>Сайд</name><desc>side</desc></wpt>
+  <wpt lat="36.601" lon="30.561"><name>Кемер</name><desc>kemer</desc></wpt>
+  <wpt lat="36.523" lon="30.556"><name>Фаселис</name><desc>phaselis</desc></wpt>
+  <wpt lat="37.237" lon="31.350"><name>Каньон Кёпрюлю</name><desc>koprulu</desc></wpt>
+  <wpt lat="36.398" lon="30.478"><name>Олимпос</name><desc>olympos</desc></wpt>
+  <wpt lat="36.423" lon="30.517"><name>Янарташ · Вечный огонь</name><desc>yanartash</desc></wpt>
+  <wpt lat="36.412" lon="30.485"><name>Чираль</name><desc>chirali</desc></wpt>
+  <wpt lat="36.241" lon="29.982"><name>Демре · Миры Ликийские</name><desc>demre</desc></wpt>
+  <wpt lat="36.202" lon="29.640"><name>Каш</name><desc>kas</desc></wpt>
+  <wpt lat="36.178" lon="29.841"><name>Кекова · Затопленный город</name><desc>kekova</desc></wpt>
+  <wpt lat="36.540" lon="29.083"><name>Долина Бабочек</name><desc>butterfly</desc></wpt>
+  <wpt lat="36.552" lon="29.115"><name>Олюдениз · Синяя лагуна</name><desc>oludeniz</desc></wpt>
+  <wpt lat="36.548" lon="29.132"><name>Гора Бабадаг (старт парапланов)</name><desc>babadag</desc></wpt>
+  <wpt lat="36.622" lon="29.113"><name>Фетхие</name><desc>fethiye</desc></wpt>
+  <wpt lat="36.584" lon="29.090"><name>Каяккёй · Мёртвый город</name><desc>kayakoy</desc></wpt>
+  <wpt lat="36.461" lon="29.246"><name>Саклыкент · Каньон</name><desc>saklikent</desc></wpt>
+  <wpt lat="37.923" lon="29.121"><name>Памуккале</name><desc>pamukkale</desc></wpt>
+  <wpt lat="37.928" lon="29.126"><name>Иераполис</name><desc>hierapolis</desc></wpt>
+  <wpt lat="37.940" lon="27.342"><name>Эфес</name><desc>ephesus</desc></wpt>
+  <wpt lat="38.419" lon="27.129"><name>Измир</name><desc>izmir</desc></wpt>
+  <wpt lat="37.034" lon="27.430"><name>Бодрум</name><desc>bodrum</desc></wpt>
+  <wpt lat="36.713" lon="28.794"><name>Даламан (аэропорт)</name><desc>dalaman</desc></wpt>
+  <wpt lat="40.693" lon="39.659"><name>Монастырь Сумела</name><desc>sumela</desc></wpt>
+  <wpt lat="40.618" lon="40.284"><name>Озеро Узунгёль</name><desc>uzungol</desc></wpt>
+  <wpt lat="41.003" lon="39.726"><name>Трабзон</name><desc>trabzon</desc></wpt>
+  <wpt lat="40.650" lon="35.833"><name>Амасья</name><desc>amasya</desc></wpt>
+  <wpt lat="39.920" lon="32.854"><name>Анкара</name><desc>ankara</desc></wpt>
+  <wpt lat="36.265" lon="29.310"><name>Пляж Патара</name><desc>patara</desc></wpt>
+  <wpt lat="36.354" lon="29.275"><name>Летоон (ЮНЕСКО)</name><desc>letoon</desc></wpt>
+  <wpt lat="36.544" lon="31.999"><name>Аланья</name><desc>alanya</desc></wpt>
+  <wpt lat="41.008" lon="28.978"><name>Стамбул</name><desc>istanbul</desc></wpt>
+  <wpt lat="40.017" lon="34.617"><name>Хаттуша (ЮНЕСКО) — столица хеттов</name><desc>hattusha</desc></wpt>
+  <wpt lat="38.280" lon="34.245"><name>Долина Ихлара</name><desc>ihlara</desc></wpt>
+  <wpt lat="38.634" lon="34.912"><name>Юргюп — Вино Каппадокии</name><desc>urgup</desc></wpt>
+  <wpt lat="37.709" lon="28.724"><name>Афродисия (ЮНЕСКО)</name><desc>afrodisias</desc></wpt>
+  <wpt lat="37.941" lon="27.437"><name>Шириндже — деревня вина</name><desc>sirince</desc></wpt>
+  <wpt lat="37.658" lon="27.295"><name>Приена — греческий город на горе</name><desc>priene</desc></wpt>
+  <wpt lat="37.388" lon="27.255"><name>Дидим — Храм Аполлона</name><desc>didyma</desc></wpt>
+  <wpt lat="39.128" lon="27.184"><name>Бергама / Пергам (ЮНЕСКО)</name><desc>bergama</desc></wpt>
+  <wpt lat="36.855" lon="28.266"><name>Мармарис</name><desc>marmaris</desc></wpt>
+  <wpt lat="36.726" lon="27.688"><name>Полуостров Датча и Книдос</name><desc>datca</desc></wpt>
+  <wpt lat="37.492" lon="27.568"><name>Озеро Бафа + Гераклея</name><desc>bafa</desc></wpt>
+  <wpt lat="41.251" lon="32.693"><name>Сафранболу (ЮНЕСКО)</name><desc>safranbolu</desc></wpt>
+  <wpt lat="38.717" lon="34.847"><name>Аванос — гончарная деревня</name><desc>avanos</desc></wpt>
+  <wpt lat="37.237" lon="31.350"><name>Каньон Кёпрюлю — рафтинг</name><desc>koprulu_canyon</desc></wpt>
+  <wpt lat="36.528" lon="30.484"><name>Канатная дорога Тахталы</name><desc>olympos_cable</desc></wpt>
+  <trk>
+    <name>Turkey 2026 Main Route</name>
+    <trkseg>
+      <trkpt lat="40.1792" lon="44.4991"/>
+      <trkpt lat="41.115" lon="43.473"/>
+      <trkpt lat="41.640" lon="43.000"/>
+      <trkpt lat="41.325" lon="42.940"/>
+      <trkpt lat="40.601" lon="43.097"/>
+      <trkpt lat="40.507" lon="43.572"/>
+      <trkpt lat="40.601" lon="43.097"/>
+      <trkpt lat="39.905" lon="41.267"/>
+      <trkpt lat="38.643" lon="34.829"/>
+      <trkpt lat="37.874" lon="32.493"/>
+      <trkpt lat="36.887" lon="30.702"/>
+      <trkpt lat="36.887" lon="30.702"/>
+      <trkpt lat="37.062" lon="30.474"/>
+      <trkpt lat="36.887" lon="30.702"/>
+      <trkpt lat="36.961" lon="30.855"/>
+      <trkpt lat="36.939" lon="31.172"/>
+      <trkpt lat="36.887" lon="30.702"/>
+      <trkpt lat="36.523" lon="30.556"/>
+      <trkpt lat="36.887" lon="30.702"/>
+      <trkpt lat="36.887" lon="30.702"/>
+      <trkpt lat="36.398" lon="30.478"/>
+      <trkpt lat="36.202" lon="29.640"/>
+      <trkpt lat="36.552" lon="29.115"/>
+      <trkpt lat="36.622" lon="29.113"/>
+      <trkpt lat="36.461" lon="29.246"/>
+      <trkpt lat="37.923" lon="29.121"/>
+      <trkpt lat="37.940" lon="27.342"/>
+      <trkpt lat="38.419" lon="27.129"/>
+    </trkseg>
+  </trk>
+</gpx>
