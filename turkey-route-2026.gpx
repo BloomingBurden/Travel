@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Turkey 2026 Navigator" xmlns="http://www.topografix.com/GPX/1/1">
   <metadata>
-    <name>Turkey 2026 Route</name>
+    <name>Екатеринбург → Армения → Турция 2026</name>
   </metadata>
+  <wpt lat="56.8389" lon="60.6057"><name>Екатеринбург</name><desc>ekaterinburg</desc></wpt>
+  <wpt lat="53.1959" lon="50.1002"><name>Самара</name><desc>samara</desc></wpt>
+  <wpt lat="48.708" lon="44.5133"><name>Волгоград</name><desc>volgograd</desc></wpt>
+  <wpt lat="43.0241" lon="44.6814"><name>Владикавказ</name><desc>vladikavkaz</desc></wpt>
+  <wpt lat="42.743" lon="44.626"><name>Граница Верхний Ларс</name><desc>verkhny_lars</desc></wpt>
+  <wpt lat="41.7151" lon="44.8271"><name>Тбилиси</name><desc>tbilisi</desc></wpt>
+  <wpt lat="41.2086" lon="44.8316"><name>Граница Садахло / Баграташен</name><desc>sadakhlo</desc></wpt>
+  <wpt lat="40.1122" lon="44.73"><name>Храм Гарни</name><desc>garni</desc></wpt>
+  <wpt lat="40.155" lon="44.818"><name>Монастырь Гегард</name><desc>geghard</desc></wpt>
+  <wpt lat="39.8783" lon="44.5764"><name>Хор Вирап</name><desc>khor_virap</desc></wpt>
+  <wpt lat="39.7167" lon="45.1956"><name>Арени — винодельня</name><desc>areni</desc></wpt>
+  <wpt lat="39.6847" lon="45.2331"><name>Монастырь Нораванк</name><desc>noravank</desc></wpt>
+  <wpt lat="40.567" lon="45.011"><name>Озеро Севан</name><desc>sevan</desc></wpt>
+  <wpt lat="40.7406" lon="44.8628"><name>Дилижан</name><desc>dilijan</desc></wpt>
+  <wpt lat="40.162" lon="44.291"><name>Эчмиадзин + Звартноц</name><desc>echmiadzin</desc></wpt>
   <wpt lat="40.1792" lon="44.4991"><name>Ереван</name><desc>yerevan</desc></wpt>
   <wpt lat="41.115" lon="43.473"><name>Граница Баврa / Ниноцминда</name><desc>bavra</desc></wpt>
   <wpt lat="41.640" lon="43.000"><name>Ахалцихе</name><desc>akhaltsikhe</desc></wpt>
@@ -74,6 +89,13 @@
   <trk>
     <name>Turkey 2026 Main Route</name>
     <trkseg>
+      <trkpt lat="56.8389" lon="60.6057"/>
+      <trkpt lat="53.1959" lon="50.1002"/>
+      <trkpt lat="48.708" lon="44.5133"/>
+      <trkpt lat="43.0241" lon="44.6814"/>
+      <trkpt lat="42.743" lon="44.626"/>
+      <trkpt lat="41.7151" lon="44.8271"/>
+      <trkpt lat="41.2086" lon="44.8316"/>
       <trkpt lat="40.1792" lon="44.4991"/>
       <trkpt lat="41.115" lon="43.473"/>
       <trkpt lat="41.640" lon="43.000"/>

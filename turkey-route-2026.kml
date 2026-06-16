@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Turkey 2026 Route</name>
+    <name>Екатеринбург → Армения → Турция 2026</name>
     <Placemark>
-      <name>Turkey 2026 Main Route</name>
+      <name>Екатеринбург → Армения → Турция 2026 — маршрут</name>
       <LineString>
         <tessellate>1</tessellate>
         <coordinates>
+          60.6057,56.8389,0
+          50.1002,53.1959,0
+          44.5133,48.708,0
+          44.6814,43.0241,0
+          44.626,42.743,0
+          44.8271,41.7151,0
+          44.8316,41.2086,0
           44.4991,40.1792,0
           43.473,41.115,0
           43.000,41.640,0
@@ -38,6 +45,21 @@
         </coordinates>
       </LineString>
     </Placemark>
+    <Placemark><name>Екатеринбург</name><description>ekaterinburg</description><Point><coordinates>60.6057,56.8389,0</coordinates></Point></Placemark>
+    <Placemark><name>Самара</name><description>samara</description><Point><coordinates>50.1002,53.1959,0</coordinates></Point></Placemark>
+    <Placemark><name>Волгоград</name><description>volgograd</description><Point><coordinates>44.5133,48.708,0</coordinates></Point></Placemark>
+    <Placemark><name>Владикавказ</name><description>vladikavkaz</description><Point><coordinates>44.6814,43.0241,0</coordinates></Point></Placemark>
+    <Placemark><name>Граница Верхний Ларс</name><description>verkhny_lars</description><Point><coordinates>44.626,42.743,0</coordinates></Point></Placemark>
+    <Placemark><name>Тбилиси</name><description>tbilisi</description><Point><coordinates>44.8271,41.7151,0</coordinates></Point></Placemark>
+    <Placemark><name>Граница Садахло / Баграташен</name><description>sadakhlo</description><Point><coordinates>44.8316,41.2086,0</coordinates></Point></Placemark>
+    <Placemark><name>Храм Гарни</name><description>garni</description><Point><coordinates>44.73,40.1122,0</coordinates></Point></Placemark>
+    <Placemark><name>Монастырь Гегард</name><description>geghard</description><Point><coordinates>44.818,40.155,0</coordinates></Point></Placemark>
+    <Placemark><name>Хор Вирап</name><description>khor_virap</description><Point><coordinates>44.5764,39.8783,0</coordinates></Point></Placemark>
+    <Placemark><name>Арени — винодельня</name><description>areni</description><Point><coordinates>45.1956,39.7167,0</coordinates></Point></Placemark>
+    <Placemark><name>Монастырь Нораванк</name><description>noravank</description><Point><coordinates>45.2331,39.6847,0</coordinates></Point></Placemark>
+    <Placemark><name>Озеро Севан</name><description>sevan</description><Point><coordinates>45.011,40.567,0</coordinates></Point></Placemark>
+    <Placemark><name>Дилижан</name><description>dilijan</description><Point><coordinates>44.8628,40.7406,0</coordinates></Point></Placemark>
+    <Placemark><name>Эчмиадзин + Звартноц</name><description>echmiadzin</description><Point><coordinates>44.291,40.162,0</coordinates></Point></Placemark>
     <Placemark><name>Ереван</name><description>yerevan</description><Point><coordinates>44.4991,40.1792,0</coordinates></Point></Placemark>
     <Placemark><name>Граница Баврa / Ниноцминда</name><description>bavra</description><Point><coordinates>43.473,41.115,0</coordinates></Point></Placemark>
     <Placemark><name>Ахалцихе</name><description>akhaltsikhe</description><Point><coordinates>43.000,41.640,0</coordinates></Point></Placemark>

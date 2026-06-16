@@ -1,7 +1,23 @@
 import urllib.request, json
 
-# Waypoints per phase as [lat, lon] (same as ROUTE_Px in turkey_map.html)
+# Waypoints per leg as [lat, lon] (same as ROUTE_Px in turkey_map.html).
+# Map phase ids: P4 = Этап 1 (ЕКБ→Ереван), P5 = Этап 2 (Ереван-база day-trips),
+# P1 = Этап 3 (Ереван→Анталия), P2 = Этап 4 (Анталия-база), P3 = Этап 5 (на запад).
+# Per-leg RDP epsilon (degrees): coarser on the long Russia leg.
+EPS = {"ROUTE_P1": 0.0006, "ROUTE_P2": 0.0006, "ROUTE_P3": 0.0006,
+       "ROUTE_P4": 0.0025, "ROUTE_P5": 0.0010}
 PHASES = {
+    "ROUTE_P4": [  # ЕКБ → Самара → Волгоград → Владикавказ → Верхний Ларс → Тбилиси → Садахло → Ереван
+        [56.8389,60.6057],[54.7388,55.9721],[53.1959,50.1002],[51.5331,46.0342],
+        [48.7080,44.5133],[46.3080,44.2558],[44.0486,43.0594],[43.0241,44.6814],
+        [42.6573,44.6430],[41.7151,44.8271],[41.2086,44.8316],[40.1792,44.4991],
+    ],
+    "ROUTE_P5": [  # Ереван day-trips: Гарни/Гегард, Хор Вирап/Арени/Нораванк, Севан/Дилижан, Эчмиадзин
+        [40.1792,44.4991],[40.1122,44.7300],[40.1550,44.8180],[40.1792,44.4991],
+        [39.8783,44.5764],[39.7167,45.1956],[39.6847,45.2331],[40.1792,44.4991],
+        [40.5670,45.0110],[40.7406,44.8628],[40.1792,44.4991],[40.1620,44.2910],
+        [40.1792,44.4991],
+    ],
     "ROUTE_P1": [
         [40.1792,44.4991],[41.115,43.473],[41.640,43.000],[41.325,42.940],
         [40.601,43.097],[40.507,43.572],[40.601,43.097],
@@ -61,7 +77,7 @@ def fetch(name, pts):
     if data.get("code") != "Ok":
         raise SystemExit(f"{name}: OSRM error {data.get('code')} {data.get('message','')}")
     geo = data["routes"][0]["geometry"]["coordinates"]  # [lon,lat]
-    geo = rdp(geo, 0.0006)
+    geo = rdp(geo, EPS.get(name, 0.0006))
     latlon = [[round(lat,5), round(lon,5)] for lon, lat in geo]
     dist = data["routes"][0]["distance"]/1000
     print(f"// {name}: {len(latlon)} pts, {dist:.0f} km", flush=True)
